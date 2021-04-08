@@ -30,6 +30,7 @@ public class Dashboard extends javax.swing.JFrame {
             quarantineCheck=false, distancingCheck=false, handwashCheck=false, allCheck=false;  
     private String parameters="",populationType="";
     private JPanel simPanel, simRestartPanel;
+     private JPanel simPanel2; //for sars
     boolean firstRun,restartFlag;
     /**
      * Creates new form Dashboard
@@ -80,13 +81,23 @@ public void initializeSimulation(){
         population = new Population[populationNum];
         if(restartFlag){                          //Restart for same parameters
             panelSarsCovSim.remove(simPanel);
+            panelSarsSim.remove(simPanel2);
             restartFlag=false;
         }
            
          simPanel = new PopulationPaintPanel(population,populationLabel);
+         simPanel2 = new PopulationPaintPanel(population,populationLabel);
+        
+    
         panelSarsCovSim.setLayout(new BorderLayout());
-        panelSarsCovSim.add(simPanel, 0); 
+        panelSarsSim.setLayout(new BorderLayout());
+        panelSarsCovSim.add(simPanel);
+        panelSarsSim.add(simPanel2);
+        panelSarsSim.revalidate();
         panelSarsCovSim.revalidate();
+       
+        
+       
         
 
 //Randomly assign type of population        
@@ -107,6 +118,8 @@ public void initializeSimulation(){
             }           
         });
     }
+
+
 
     public void getSimulation(){
 //Restart Timer        
@@ -733,7 +746,7 @@ public void initializeSimulation(){
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
                 .addComponent(labelMild, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -764,7 +777,7 @@ public void initializeSimulation(){
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 114, Short.MAX_VALUE)
                 .addComponent(labelSevere, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel6Layout.setVerticalGroup(
@@ -795,7 +808,7 @@ public void initializeSimulation(){
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
                 .addComponent(labelRecovered, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel7Layout.setVerticalGroup(
