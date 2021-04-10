@@ -25,7 +25,7 @@ public class Dashboard extends javax.swing.JFrame {
     private int populationNum2 = populationNum;
     Population[] population;
     Timer timer;
-    private int count, timerTriggers,recordRate = 2;
+    private int count, quarantinedNum, timerTriggers,recordRate = 2;
     private boolean paused = false, maskCheck=false, testingCheck=false, vaccineCheck=false, 
             quarantineCheck=false, distancingCheck=false, handwashCheck=false, allCheck=false;  
     private String parameters="",populationType="";
@@ -85,8 +85,8 @@ public void initializeSimulation(){
             restartFlag=false;
         }
            
-         simPanel = new PopulationPaintPanel(population,populationLabel);
-         simPanel2 = new PopulationPaintPanel(population,populationLabel);
+         simPanel = new PopulationPaintPanel(population,populationLabel, quarantineCheck);
+         simPanel2 = new PopulationPaintPanel(population,populationLabel,quarantineCheck);
         
     
         panelSarsCovSim.setLayout(new BorderLayout());
@@ -100,11 +100,26 @@ public void initializeSimulation(){
        
         
 
-//Randomly assign type of population        
-        int infected = (int) (Math.random() * populationNum);
-        for (int i = 0; i < population.length; i++) {
-            population[i] = new Population((int) (Math.random() * (width - 10)), (int) (Math.random() * (height - 10)),
-                    i == infected ? true : false, false);
+//Randomly assign type of population  
+        quarantinedNum = (int)((0.2) * populationNum);
+        if(quarantineCheck){
+          int infected = (int) (Math.random() * (populationNum - quarantinedNum)) + quarantinedNum;
+          System.out.println("quarantinedNum="+quarantinedNum);
+		for (int i = 0; i < population.length; i++) {
+			if (i < quarantinedNum) {
+				population[i] = new Population((int) (Math.random() * (width - 10)) ,
+						(int) (Math.random() * (height - 10)), false, true, true);
+			} else {
+				population[i] = new Population((int) (Math.random() * (width - 10)) ,
+						(int) (Math.random() * (height - 10)), i == infected ? true : false, false, true);
+			}
+		}
+        }else{
+            int infected = (int) (Math.random() * populationNum);
+                for (int i = 0; i < population.length; i++) {
+                    population[i] = new Population((int) (Math.random() * (width - 10)), (int) (Math.random() * (height - 10)),
+                    i == infected ? true : false,false, false);
+                }
         }
 
 //Set the timer and update the status of population        

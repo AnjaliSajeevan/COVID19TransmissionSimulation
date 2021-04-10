@@ -25,9 +25,13 @@ public class PopulationPaintPanel extends JPanel{
     int dead;
     String populationMessage="";
     JLabel populationLabel;
-    public PopulationPaintPanel(Population[] people, JLabel populationLabel){
+    int infectedQuarantineNum;//infectedQuarantineNum - No of infected people that qurantine when qurantine is checked .
+    boolean quarantineCheck;
+    public PopulationPaintPanel(Population[] people, JLabel populationLabel, boolean quarantineCheck){
         this.people=people;
         this.populationLabel=populationLabel;
+        this.infectedQuarantineNum = (int)(0.2 * people.length);
+        this.quarantineCheck = quarantineCheck;
     }
     public void paintComponent(Graphics page) {
         
@@ -63,14 +67,18 @@ public class PopulationPaintPanel extends JPanel{
             }
           
             page.fillOval((int) people[i].getX(), (int) people[i].getY(), 10, 10);
+            infectedQuarantineNum = (int)(0.2 * infected);
             for (int j = 0; j < people.length; j++) {
                 if (i != j) {
-                    people[i].check(people[j]);
+                    if(people[j].isQuarantined()){
+                        people[i].ignoreCheck();
+                    }else{
+                    infectedQuarantineNum = people[i].check(people[j],infectedQuarantineNum,quarantineCheck);
+                    }
                 }
             }
+       }
 
-
-        }
         populationMessage="Healthy: "+healthy;
         populationMessage+="\nInfected: "+infected;
         populationMessage+="\nHospitalized: "+hospitalized;

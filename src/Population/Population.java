@@ -18,10 +18,12 @@ public class Population {
     private int width= 700, height = 400;
     private int status; // 0 for healthy, 1 for infected, 2 for hospitalized , 3 for recovered, 4 for dead
     private int countInfected, countHospitalized;
-    private boolean firstInfected, ignore, compareVirus;
+    private boolean firstInfected,quarantined, ignore, compareVirus;
     private double risk;
+    private long infectTime;
 
-    public Population(int x, int y, boolean infected, boolean compareVirus) {
+
+    public Population(int x, int y, boolean infected, boolean quarantined, boolean compareVirus) {
         this.x = x;
         this.y = y;
         this.compareVirus = compareVirus; //Sar Virus(Type2 virus)
@@ -32,10 +34,11 @@ public class Population {
         countHospitalized = 0;
         status = (infected ? 1 : 0);
         firstInfected = infected;
+        this.quarantined = quarantined;
     }
 
     public void countStatus() {
-        if (status != 2 && status != 4) {
+        if ((status != 2 && status != 4) && (!quarantined)) {
             if (!compareVirus) {
                 if (x + xTemp + 10 > width || x + xTemp < 0) {
                     xTemp = -xTemp;
@@ -55,11 +58,11 @@ public class Population {
             y += yTemp;
         }
         if (!firstInfected) {
-            if (status == 1) {//infected
-                countInfected++;
-                if (countInfected > 800) {
-                    status = 3;
-                } else if (risk < 0.02) {
+            if (status == 1) {//infected      
+            double difference = ((System.currentTimeMillis()) - (this.getInfectTime())) / 1000F;
+                if(difference >= 5 ){
+                  status = 0;  
+                }else if (risk < 0.02) {
                     status = 4;
                 }
             } else if (status == 2) {//hospitalized
@@ -73,13 +76,25 @@ public class Population {
         }
     }
 
-    public void check(Population p) {
+    public int check(Population p, int infectedQuarantineNum, boolean quarantineCheck){
         if (!ignore) {
             if (Math.sqrt(Math.pow(x - p.getX(), 2) + Math.pow(y - p.getY(), 2)) < 10) {
-                if (p.getStatus() == 1 && Math.random() < 0.85 && status == 0) {
+                if(quarantineCheck){
+                if (p.getStatus() == 1 && Math.random() < 0.85 && status == 0 && (this.quarantined==false)) {
                     status = 1;
+                    this.setInfectTime();
+                    if(infectedQuarantineNum > 0){
+                    this.quarantined=true;
+                    infectedQuarantineNum--;
+                    }
                 }
-                if (status != 2) {
+                }else{
+                if (p.getStatus() == 1 && Math.random() < 0.85 && status == 0 ) {
+                    status = 1;
+                    this.setInfectTime();
+                }                    
+                }
+                if ((!quarantined) &&  (status != 2)) {
                     xTemp = (Math.random() * 2 * (x - p.getX() < 0 ? -1.0 : 1.0));
                     yTemp = (Math.sqrt(4 - Math.pow(xTemp, 2))) * (y - p.getY() < 0 ? -1.0 : 1.0);
                     p.ignoreCheck();
@@ -91,6 +106,7 @@ public class Population {
         } else {
             ignore = false;
         }
+        return infectedQuarantineNum;
     }
 
     public void ignoreCheck() {
@@ -130,4 +146,17 @@ public class Population {
     public boolean isInfected() {
         return (status == 1 ? true : false);
     }
+
+    public boolean isQuarantined() {
+        return quarantined;
+    }
+
+    public long getInfectTime() {
+        return this.infectTime;
+    }
+
+    public void setInfectTime() {
+        this.infectTime = System.currentTimeMillis();
+    }
+    
 }
