@@ -35,6 +35,7 @@ public class PopulationPaintPanelTest {
      */
     @Test
     public void testPaintComponent() {
+        // Arrange - ToDo.
         System.out.println("paintComponent");
         Graphics page = null;
         PopulationPaintPanel instance = null;
