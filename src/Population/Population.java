@@ -89,13 +89,13 @@ public class Population {
                 }
 
             } else if (status == 2) {//hospitalized
-                 double infectTime = ((System.currentTimeMillis()) - (this.getInfectTime())) / 1000F;
+                double infectTime = ((System.currentTimeMillis()) - (this.getInfectTime())) / 1000F;
                 if(infectTime >= 3 ){
-                if (comorbidity){//dead
-                    status = 4;
+                    if (comorbidity){//dead
+                        status = 4;
+                    }
                 }
-                }
-                } else if(infectTime >= 5 ){ {//recovered
+            } else if(infectTime >= 5 ){ {//recovered
                     status = 3;
                     quarantined=false;
                 }
@@ -165,6 +165,10 @@ public class Population {
         return status;
     }
 
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public double getX() {
         return x;
     }
@@ -201,5 +205,33 @@ public class Population {
     public void setInfectTime() {
         this.infectTime = System.currentTimeMillis();
     }
-    
+
+    // For unit testing.
+    public void setInfectTime(long time){
+        this.infectTime = time;
+    }
+
+    public boolean getIgnore(){
+        return ignore;
+    }
+
+    public void setIgnore(boolean ignore){
+        this.ignore = ignore;
+    }
+
+    public void setFirstInfected(boolean firstInfected){
+        this.firstInfected = firstInfected;
+    }
+
+    public int getCountHospitalized(){
+        return countHospitalized;
+    }
+
+    public void setHospitalCapacity(int hospitalCapacity) {
+        this.hospitalCapacity = hospitalCapacity;
+    }
+
+    public void setComorbidity(boolean comorbidity){
+        this.comorbidity = comorbidity;
+    }
 }
