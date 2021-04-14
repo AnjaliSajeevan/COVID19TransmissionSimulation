@@ -6,6 +6,7 @@
 package Population;
 
 import UI.Dashboard;
+import java.util.Map;
 
 /**
  *
@@ -17,24 +18,37 @@ public class Population {
     private double x, y, xTemp, yTemp;
     private int width= 700, height = 400;
     private int status; // 0 for healthy, 1 for infected, 2 for hospitalized , 3 for recovered, 4 for dead
-    private int countInfected, countHospitalized;
-    private boolean firstInfected,quarantined, ignore, compareVirus;
+    private int countInfected, hospitalCapacity,countHospitalized,vaccineEffective;
+    private boolean firstInfected,quarantined,distancing,vaccinated,prone, ignore, comorbidity,compareVirus;
     private double risk;
     private long infectTime;
 
 
-    public Population(int x, int y, boolean infected, boolean quarantined, boolean compareVirus) {
+    public Population(int x, int y,Map<String,Boolean> conditions ,int hospitalCapacity) {
         this.x = x;
         this.y = y;
-        this.compareVirus = compareVirus; //Sar Virus(Type2 virus)
+        this.compareVirus = conditions.get("compareVirus"); //Sar Virus(Type2 virus)
+        this.comorbidity = conditions.get("comorbidity");
+        this.hospitalCapacity = hospitalCapacity;
+        this.prone = conditions.get("prone");
         risk = Math.random();
+        this.distancing = conditions.get("distancingCheck");
+        if(distancing){     //Displacement is less to keep distance from others.
+        xTemp = 0.4;
+        yTemp = Math.sqrt(4 - Math.pow(xTemp, 2)) * (Math.random() < 0.5 ? -0.4 : 0.4);
+        }else{          //Usually displacement between 0.4 to 1.9
         xTemp = Math.random() * 4.0 - 2.0;
         yTemp = Math.sqrt(4 - Math.pow(xTemp, 2)) * (Math.random() < 0.5 ? -1.0 : 1.0);
+        }
         countInfected = 0;
         countHospitalized = 0;
-        status = (infected ? 1 : 0);
-        firstInfected = infected;
-        this.quarantined = quarantined;
+        status = (conditions.get("infected") ? 1 : 0);
+        firstInfected = conditions.get("infected");
+        this.quarantined = conditions.get("quarantine");
+        this.vaccinated = conditions.get("vaccinated");
+        if(vaccinated){
+            status = 5;
+        }
     }
 
     public void countStatus() {
@@ -57,20 +71,33 @@ public class Population {
             x += xTemp;
             y += yTemp;
         }
+       double difference = ((System.currentTimeMillis()) - (this.getInfectTime())) / 1000F;
         if (!firstInfected) {
-            if (status == 1) {//infected      
-            double difference = ((System.currentTimeMillis()) - (this.getInfectTime())) / 1000F;
-                if(difference >= 5 ){
-                  status = 0;  
-                }else if (risk < 0.02) {
+            if (status == 1) {//infected     
+                if(comorbidity){
+                    if(countHospitalized < hospitalCapacity ) {
+                        status = 2;
+                        countHospitalized++;
+                        this.quarantined = true;
+                    }else{
+                       status = 2;
+                    }
+                }else{
+                       if(difference >= 5 ){
+                           status = 3;
+                       }                  
+                }
+
+            } else if (status == 2) {//hospitalized
+                 double infectTime = ((System.currentTimeMillis()) - (this.getInfectTime())) / 1000F;
+                if(infectTime >= 3 ){
+                if (comorbidity){//dead
                     status = 4;
                 }
-            } else if (status == 2) {//hospitalized
-                countHospitalized++;
-                if (countHospitalized > 500 && risk < 0.5) {//dead
-                    status = 4;
-                } else if (countHospitalized > 500) {//recovered
+                }
+                } else if(infectTime >= 5 ){ {//recovered
                     status = 3;
+                    quarantined=false;
                 }
             }
         }
@@ -80,7 +107,7 @@ public class Population {
         if (!ignore) {
             if (Math.sqrt(Math.pow(x - p.getX(), 2) + Math.pow(y - p.getY(), 2)) < 10) {
                 if(quarantineCheck){
-                if (p.getStatus() == 1 && Math.random() < 0.85 && status == 0 && (this.quarantined==false)) {
+                if (p.getStatus() == 1 && Math.random() < 0.85 && (status == 0 || status==3 || status ==5) && (this.quarantined==false)) {
                     status = 1;
                     this.setInfectTime();
                     if(infectedQuarantineNum > 0){
@@ -89,22 +116,33 @@ public class Population {
                     }
                 }
                 }else{
-                if (p.getStatus() == 1 && Math.random() < 0.85 && status == 0 ) {
+                if (p.getStatus() == 1 && Math.random() < 0.85 && (status == 0 || status==3 || status==5) ) {
                     status = 1;
                     this.setInfectTime();
                 }                    
                 }
-                if ((!quarantined) &&  (status != 2)) {
-                    xTemp = (Math.random() * 2 * (x - p.getX() < 0 ? -1.0 : 1.0));
-                    yTemp = (Math.sqrt(4 - Math.pow(xTemp, 2))) * (y - p.getY() < 0 ? -1.0 : 1.0);
+                if ((!quarantined) &&  (status != 2) ) {
+                    if(distancing){     //Displacement is less to keep distance from others.
+                        xTemp = (Math.random() * 2 * (x - p.getX() < 0 ? -0.4 : 0.4));
+                        yTemp = (Math.sqrt(4 - Math.pow(xTemp, 2))) * (y - p.getY() < 0 ? -0.4 : 0.4);
+                    }else{
+                        xTemp = (Math.random() * 2 * (x - p.getX() < 0 ? -1.0 : 1.0));
+                        yTemp = (Math.sqrt(4 - Math.pow(xTemp, 2))) * (y - p.getY() < 0 ? -1.0 : 1.0);
+                        p.ignoreCheck();
+                    }
+                }
+                if((vaccinated) && (!prone)){
                     p.ignoreCheck();
+                    
                 }
                 if (firstInfected) {
                     firstInfected = false;
                 }
             }
         } else {
+            if(!((vaccinated) && (!prone))){
             ignore = false;
+            }
         }
         return infectedQuarantineNum;
     }
@@ -150,6 +188,11 @@ public class Population {
     public boolean isQuarantined() {
         return quarantined;
     }
+
+    public void setQuarantined(boolean quarantined) {
+        this.quarantined = quarantined;
+    }
+    
 
     public long getInfectTime() {
         return this.infectTime;

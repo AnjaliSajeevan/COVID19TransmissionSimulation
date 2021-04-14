@@ -6,8 +6,12 @@
 package Simulation;
 
 import Population.Population;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.geom.Ellipse2D;
+import java.util.Map;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -23,15 +27,23 @@ public class PopulationPaintPanel extends JPanel{
     int hospitalized;
     int recovered;
     int dead;
+    int asymptoticPeople;
     String populationMessage="";
-    JLabel populationLabel;
+    JLabel populationLabel, labelHealthy,labelSevere, labelRecovered, labelDead, labelInfected;
     int infectedQuarantineNum;//infectedQuarantineNum - No of infected people that qurantine when qurantine is checked .
-    boolean quarantineCheck;
-    public PopulationPaintPanel(Population[] people, JLabel populationLabel, boolean quarantineCheck){
+    boolean quarantineCheck,testingCheck;
+    public PopulationPaintPanel(Population[] people, Map<String,JLabel> labels, Map<String,Boolean> factors){
+        
         this.people=people;
-        this.populationLabel=populationLabel;
+        this.populationLabel=labels.get("population");
+        this.labelHealthy=labels.get("healthy");
+        this.labelSevere=labels.get("severe");
+        this.labelRecovered=labels.get("recovered");
+        this.labelDead=labels.get("dead");
+        this.labelInfected = labels.get("infected");
         this.infectedQuarantineNum = (int)(0.2 * people.length);
-        this.quarantineCheck = quarantineCheck;
+        this.quarantineCheck = factors.get("quarantineCheck");
+        this.testingCheck = factors.get("testingCheck");
     }
     public void paintComponent(Graphics page) {
         
@@ -42,6 +54,9 @@ public class PopulationPaintPanel extends JPanel{
        hospitalized=0;
        recovered=0;
        dead=0;
+       asymptoticPeople=0;
+       final BasicStroke wideStroke = new BasicStroke(8.0f);
+       
        for (int i = 0; i < people.length; i++) {
             switch (people[i].getStatus()) {
                 case 0:
@@ -49,24 +64,39 @@ public class PopulationPaintPanel extends JPanel{
                     healthy++;
                     break;
                 case 1:
-                    page.setColor(Color.red);
+                    if(!testingCheck){       //If Testing is checked, all infected person would be prominent.
+                        asymptoticPeople++;
+                        if((asymptoticPeople%3)==0){  // Every 3rd person is asymptotic
+                            page.setColor(Color.orange);  
+                        }else{
+                            page.setColor(new Color(255,135,141));
+                        }
+                    }else{
+                       page.setColor(Color.pink); 
+                    }
                     infected++;
                     break;
                 case 2:
-                    page.setColor(Color.pink);
+                    page.setColor(Color.red);                  
                     hospitalized++;
                     break;
                 case 3:
-                    page.setColor(Color.blue);
+                    page.setColor(Color.green);
                     recovered++;
                     break;
                 case 4:
                     page.setColor(Color.gray);
                     dead++;
                     break;
+                case 5:
+                    page.setColor(new Color(41,171,135));
+                    healthy++;
+                   
+                    break;
             }
-          
+   
             page.fillOval((int) people[i].getX(), (int) people[i].getY(), 10, 10);
+            
             infectedQuarantineNum = (int)(0.2 * infected);
             for (int j = 0; j < people.length; j++) {
                 if (i != j) {
@@ -79,12 +109,14 @@ public class PopulationPaintPanel extends JPanel{
             }
        }
 
-        populationMessage="Healthy: "+healthy;
-        populationMessage+="\nInfected: "+infected;
-        populationMessage+="\nHospitalized: "+hospitalized;
-        populationMessage+="\nRecovered: "+recovered;
-        populationMessage+="\nDead: "+dead;
-        populationLabel.setText("Population -"+populationMessage);
+        labelHealthy.setText(String.valueOf(healthy));
+        labelDead.setText(String.valueOf(dead));
+        labelRecovered.setText(String.valueOf(recovered));
+        labelInfected.setText(String.valueOf(infected));
+        labelSevere.setText(String.valueOf(hospitalized));
+  
+        
+        populationLabel.setText("Population Count:"+people.length);
       
     }
     
