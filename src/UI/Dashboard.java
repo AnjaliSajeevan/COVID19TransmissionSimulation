@@ -8,10 +8,12 @@ package UI;
 import Population.Population;
 import Simulation.PopulationPaintPanel;
 import java.awt.BorderLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,11 +34,12 @@ public class Dashboard extends javax.swing.JFrame {
     Timer timer;
     private int count, quarantinedNum,comorbidityNum, timerTriggers,recordRate = 2;
     private boolean paused = false, maskCheck=false, testingCheck=false, vaccineCheck=false, 
-            quarantineCheck=false, distancingCheck=false, remoteCheck=false, allCheck=false;  
+            quarantineCheck=false, distancingCheck=false, remoteCheck=false, allCheck=false,groupEvent=false;  
     private String parameters="",populationType="";
     private JPanel simPanel, simRestartPanel;
      private JPanel simPanel2; //for sars
     boolean firstRun,restartFlag;
+    Rectangle groupBox = new Rectangle(100, 100, 100, 100);
     /**
      * Creates new form Dashboard
      */
@@ -107,8 +110,8 @@ public void initializeSimulation(){
             restartFlag=false;
         }
            
-         simPanel = new PopulationPaintPanel(population,labelMap, factorMap);
-         simPanel2 = new PopulationPaintPanel(population,labelMap, factorMap);
+         simPanel = new PopulationPaintPanel(population,labelMap, factorMap,groupEvent,groupBox);
+         simPanel2 = new PopulationPaintPanel(population,labelMap, factorMap,groupEvent,groupBox);
         
     
         panelSarsCovSim.setLayout(new BorderLayout());
@@ -139,7 +142,7 @@ Population Parameters:
         boolean distancing = false;
         boolean vaccinated = false;
         boolean quarantined = false;
-        boolean compareVirus = true;
+        boolean compareVirus = false;
         boolean infected = false;
         boolean prone=true;
         Map<String,Boolean> conditionMap = new HashMap<String,Boolean>();
@@ -192,7 +195,7 @@ Population Parameters:
             conditionMap.put("compareVirus", compareVirus);
             conditionMap.put("infected", infected);
        
-   population[i] = new Population((int) (Math.random() * (width - 10)), (int) (Math.random() * (height - 10)),conditionMap,hospitalCapacity);           
+   population[i] = new Population((int) (Math.random() * (width - 10)), (int) (Math.random() * (height - 10)),conditionMap,hospitalCapacity,groupEvent,groupBox);           
         }
 
 
@@ -260,6 +263,7 @@ Population Parameters:
         jLabel10 = new javax.swing.JLabel();
         populationSlider = new javax.swing.JSlider();
         jLabel13 = new javax.swing.JLabel();
+        checkGroupEvent = new javax.swing.JCheckBox();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel14 = new javax.swing.JPanel();
         jPanel15 = new javax.swing.JPanel();
@@ -457,6 +461,15 @@ Population Parameters:
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel13.setText("POPULATION");
 
+        checkGroupEvent.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        checkGroupEvent.setForeground(new java.awt.Color(0, 0, 139));
+        checkGroupEvent.setText("Group Event");
+        checkGroupEvent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkGroupEventActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -476,9 +489,11 @@ Population Parameters:
                             .addComponent(buttonPause, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(buttonResume, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(16, 16, 16)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(checkGroupEvent, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(checkTestingAndTracing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(checkVaccine, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(checkQuarantine, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -486,17 +501,16 @@ Population Parameters:
                             .addComponent(checkRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(checkSelectAll, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
+                .addGap(27, 27, 27)
                 .addComponent(checkSelectAll)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(checkTestingAndTracing)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(checkVaccine)
@@ -506,7 +520,9 @@ Population Parameters:
                 .addComponent(checkSocialDistancing)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(checkRemote)
-                .addGap(93, 93, 93)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(checkGroupEvent)
+                .addGap(56, 56, 56)
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(populationSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -843,7 +859,7 @@ Population Parameters:
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 142, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 133, Short.MAX_VALUE)
                 .addComponent(labelSevere, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -874,7 +890,7 @@ Population Parameters:
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
                 .addComponent(labelRecovered, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel6Layout.setVerticalGroup(
@@ -905,7 +921,7 @@ Population Parameters:
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
                 .addComponent(labelDead, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel7Layout.setVerticalGroup(
@@ -1077,7 +1093,24 @@ Population Parameters:
         checkQuarantine.setEnabled(true);
         checkSocialDistancing.setEnabled(true);
         checkSelectAll.setEnabled(true);
+        
+        for (int i = 0; i < population.length; i++) {
+            Map<String, Integer> map = population[i].getCodeDash();
+            for (String name : map.keySet()) {
+                String value = map.get(name).toString();
+                System.out.println("Dashboard " + name + " " + value);
+            }
+        }
     }//GEN-LAST:event_buttonStopActionPerformed
+
+    private void checkGroupEventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkGroupEventActionPerformed
+        // TODO add your handling code here:
+           if(!checkGroupEvent.isSelected()){
+            groupEvent=false;
+        } else {
+           groupEvent=true;
+        }
+    }//GEN-LAST:event_checkGroupEventActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1119,6 +1152,7 @@ Population Parameters:
     private javax.swing.JButton buttonResume;
     private javax.swing.JButton buttonStart;
     private javax.swing.JButton buttonStop;
+    private javax.swing.JCheckBox checkGroupEvent;
     private javax.swing.JCheckBox checkQuarantine;
     private javax.swing.JCheckBox checkRemote;
     private javax.swing.JCheckBox checkSelectAll;

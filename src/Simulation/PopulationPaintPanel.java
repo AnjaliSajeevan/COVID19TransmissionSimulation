@@ -9,6 +9,8 @@ import Population.Population;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
 import java.util.Map;
 import javax.swing.BorderFactory;
@@ -32,7 +34,9 @@ public class PopulationPaintPanel extends JPanel{
     JLabel populationLabel, labelHealthy,labelSevere, labelRecovered, labelDead, labelInfected;
     int infectedQuarantineNum;//infectedQuarantineNum - No of infected people that qurantine when qurantine is checked .
     boolean quarantineCheck,testingCheck;
-    public PopulationPaintPanel(Population[] people, Map<String,JLabel> labels, Map<String,Boolean> factors){
+    Rectangle groupBox;boolean groupEvent;
+            
+    public PopulationPaintPanel(Population[] people, Map<String,JLabel> labels, Map<String,Boolean> factors,boolean groupEvent,Rectangle groupBox){
         
         this.people=people;
         this.populationLabel=labels.get("population");
@@ -44,6 +48,8 @@ public class PopulationPaintPanel extends JPanel{
         this.infectedQuarantineNum = (int)(0.2 * people.length);
         this.quarantineCheck = factors.get("quarantineCheck");
         this.testingCheck = factors.get("testingCheck");
+        this.groupBox=groupBox;
+        this.groupEvent=groupEvent;
     }
     public void paintComponent(Graphics page) {
         
@@ -118,6 +124,12 @@ public class PopulationPaintPanel extends JPanel{
         
         populationLabel.setText("Population Count:"+people.length);
       
+        if (groupEvent == true) {
+            Graphics2D g2 = (Graphics2D) page;
+            page.setColor(Color.BLACK);
+            g2.draw(groupBox);
+ 
+        }
     }
     
 }

@@ -6,6 +6,11 @@
 package Population;
 
 import UI.Dashboard;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,17 +21,26 @@ public class Population {
     
 
     private double x, y, xTemp, yTemp;
-    private int width= 700, height = 400;
+    Rectangle mainPanel = new Rectangle(0, 0, 700, 400);
     private int status; // 0 for healthy, 1 for infected, 2 for hospitalized , 3 for recovered, 4 for dead
     private int countInfected, hospitalCapacity,countHospitalized,vaccineEffective;
     private boolean firstInfected,quarantined,distancing,vaccinated,prone, ignore, comorbidity,compareVirus;
     private double risk;
     private long infectTime;
+    private double x_f;
+    private double y_f;
+    boolean groupEvent;
+    Rectangle groupBox;
+    private String code;
+    private int Collisioncount=0;
+    Map<String,Integer> map= new HashMap<String,Integer>();
 
 
-    public Population(int x, int y,Map<String,Boolean> conditions ,int hospitalCapacity) {
+    public Population(int x, int y,Map<String,Boolean> conditions ,int hospitalCapacity,boolean groupEvent,Rectangle groupBox) {
         this.x = x;
         this.y = y;
+        this.groupEvent=groupEvent;
+        this.groupBox=groupBox;
         this.compareVirus = conditions.get("compareVirus"); //Sar Virus(Type2 virus)
         this.comorbidity = conditions.get("comorbidity");
         this.hospitalCapacity = hospitalCapacity;
@@ -49,22 +63,76 @@ public class Population {
         if(vaccinated){
             status = 5;
         }
+        uniqueCode();
+    }
+    
+    public Map getCodeDash() {
+        return map;
     }
 
+    public String uniqueCode() {
+        List<Integer> numbers = new ArrayList();
+        for(int i = 0; i < 10; i++){
+        numbers.add(i);
+        }
+
+        Collections.shuffle(numbers);
+
+        String result = "";
+        for (int i = 0; i < 6; i++) {
+            result += numbers.get(i).toString();
+            code = 'A' + result;
+    }
+        return code;
+    }
+    
+
     public void countStatus() {
+        x_f = x + xTemp;
+        y_f = y + yTemp;
         if ((status != 2 && status != 4) && (!quarantined)) {
             if (!compareVirus) {
-                if (x + xTemp + 10 > width || x + xTemp < 0) {
-                    xTemp = -xTemp;
+                if (groupEvent == true) {
+                   
+                    if (groupBox.contains(x, y) == true) {
+                        if (groupBox.contains(x_f, y_f) == false) {
+
+                            if (x_f < groupBox.x || x_f > groupBox.width) {
+                                xTemp = -xTemp;
+                            }
+                            if (y_f < groupBox.y || y_f > groupBox.height) {
+                                yTemp = -yTemp;
+                            }
+                        }
+                    } else {
+                        if (x + xTemp > mainPanel.width || x + xTemp < 0) {
+                            xTemp = -xTemp;
+                        }
+                        if (y + yTemp > mainPanel.height || y + yTemp < 0) {
+                            yTemp = -yTemp;
+                        }
+                    }
                 }
-                if (y + yTemp + 10 > height || y + yTemp < 0) {
-                    yTemp = -yTemp;
+
+
+
+                if (groupEvent == false) {
+
+                    if (x + xTemp + 10 > mainPanel.width || x + xTemp < 0) {
+                        xTemp = -xTemp;
+                    }
+                    if (y + yTemp + 10 > mainPanel.height || y + yTemp < 0) {
+                        yTemp = -yTemp;
+                    }
+
                 }
+
             } else {
-                if (x + xTemp + 10 > width * 2 || x + xTemp < Dashboard.WIDTH) {
+                System.out.println("Hello");
+                if (x + xTemp + 10 > mainPanel.width * 2 || x + xTemp < Dashboard.WIDTH) {
                     xTemp = -xTemp;
                 }
-                if (y + yTemp + 10 > height || y + yTemp < 0) {
+                if (y + yTemp + 10 > mainPanel.height || y + yTemp < 0) {
                     yTemp = -yTemp;
                 }
             }
@@ -106,6 +174,7 @@ public class Population {
     public int check(Population p, int infectedQuarantineNum, boolean quarantineCheck){
         if (!ignore) {
             if (Math.sqrt(Math.pow(x - p.getX(), 2) + Math.pow(y - p.getY(), 2)) < 10) {
+                Collisioncount++;
                 if(quarantineCheck){
                 if (p.getStatus() == 1 && Math.random() < 0.85 && (status == 0 || status==3 || status ==5) && (this.quarantined==false)) {
                     status = 1;
@@ -144,6 +213,7 @@ public class Population {
             ignore = false;
             }
         }
+         map.put(code, Collisioncount);
         return infectedQuarantineNum;
     }
 
