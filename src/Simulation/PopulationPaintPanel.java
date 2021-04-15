@@ -16,6 +16,8 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
+
 
 /**
  *
@@ -30,13 +32,15 @@ public class PopulationPaintPanel extends JPanel{
     int recovered;
     int dead;
     int asymptoticPeople;
+    int mark;
     String populationMessage="";
     JLabel populationLabel, labelHealthy,labelSevere, labelRecovered, labelDead, labelInfected;
     int infectedQuarantineNum;//infectedQuarantineNum - No of infected people that qurantine when qurantine is checked .
     boolean quarantineCheck,testingCheck;
     Rectangle groupBox;boolean groupEvent;
+    int populationNum;
             
-    public PopulationPaintPanel(Population[] people, Map<String,JLabel> labels, Map<String,Boolean> factors,boolean groupEvent,Rectangle groupBox){
+    public PopulationPaintPanel(Population[] people, Map<String,JLabel> labels, Map<String,Boolean> factors,boolean groupEvent,Rectangle groupBox,int populationNum){
         
         this.people=people;
         this.populationLabel=labels.get("population");
@@ -50,6 +54,7 @@ public class PopulationPaintPanel extends JPanel{
         this.testingCheck = factors.get("testingCheck");
         this.groupBox=groupBox;
         this.groupEvent=groupEvent;
+        this.populationNum=populationNum;
     }
     public void paintComponent(Graphics page) {
         
@@ -128,7 +133,10 @@ public class PopulationPaintPanel extends JPanel{
             Graphics2D g2 = (Graphics2D) page;
             page.setColor(Color.BLACK);
             g2.draw(groupBox);
- 
+            
+            
+//graph
+        
         }
     }
     

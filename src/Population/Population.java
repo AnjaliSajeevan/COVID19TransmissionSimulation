@@ -5,6 +5,8 @@
  */
 package Population;
 
+import Graph.Graph;
+import Graph.Vertex;
 import UI.Dashboard;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -29,18 +31,21 @@ public class Population {
     private long infectTime;
     private double x_f;
     private double y_f;
+    private int populationNum;
     boolean groupEvent;
     Rectangle groupBox;
     private String code;
     private int Collisioncount=0;
     Map<String,Integer> map= new HashMap<String,Integer>();
+    Graph graph;
 
 
-    public Population(int x, int y,Map<String,Boolean> conditions ,int hospitalCapacity,boolean groupEvent,Rectangle groupBox) {
+    public Population(int x, int y,Map<String,Boolean> conditions ,int hospitalCapacity,boolean groupEvent,Rectangle groupBox,int populationNum,Graph graph) {
         this.x = x;
         this.y = y;
         this.groupEvent=groupEvent;
         this.groupBox=groupBox;
+        this.graph=graph;
         this.compareVirus = conditions.get("compareVirus"); //Sar Virus(Type2 virus)
         this.comorbidity = conditions.get("comorbidity");
         this.hospitalCapacity = hospitalCapacity;
@@ -64,6 +69,10 @@ public class Population {
             status = 5;
         }
         uniqueCode();
+        this.populationNum=populationNum;
+        this.graph=graph;
+       
+        
     }
     
     public Map getCodeDash() {
@@ -128,7 +137,7 @@ public class Population {
                 }
 
             } else {
-                System.out.println("Hello");
+            
                 if (x + xTemp + 10 > mainPanel.width * 2 || x + xTemp < Dashboard.WIDTH) {
                     xTemp = -xTemp;
                 }
@@ -172,9 +181,31 @@ public class Population {
     }
 
     public int check(Population p, int infectedQuarantineNum, boolean quarantineCheck){
+        Vertex v1 = null;
+        Vertex v2 = null;
         if (!ignore) {
             if (Math.sqrt(Math.pow(x - p.getX(), 2) + Math.pow(y - p.getY(), 2)) < 10) {
-                Collisioncount++;
+                if (graph.checkVertex(p.code) == false) {
+                    v1 = new Vertex(p.code);
+                    graph.AddVertex(v1);
+                } else  {
+
+                    v1 = graph.getVertex(p.code);
+                }
+                
+//                System.out.println(" Name of V1: "+v1.getName());
+                
+                if (graph.checkVertex(code) == false) {
+                    v2 = new Vertex(code);
+                    graph.AddVertex(v2);
+                } else {
+
+                    v2 = graph.getVertex(code);
+                }
+                
+//                System.out.println(" Name of V2: "+v2.getName());
+                graph.AddEdge(v1, v2);
+                
                 if(quarantineCheck){
                 if (p.getStatus() == 1 && Math.random() < 0.85 && (status == 0 || status==3 || status ==5) && (this.quarantined==false)) {
                     status = 1;
@@ -208,13 +239,16 @@ public class Population {
                     firstInfected = false;
                 }
             }
+//            graph.printGraph();
+//        Collisioncount+=1;    
+//        map.put(code, Collisioncount);
+       
         } else {
             if(!((vaccinated) && (!prone))){
             ignore = false;
             }
         }
-         map.put(code, Collisioncount);
-        return infectedQuarantineNum;
+        return infectedQuarantineNum;  
     }
 
     public void ignoreCheck() {

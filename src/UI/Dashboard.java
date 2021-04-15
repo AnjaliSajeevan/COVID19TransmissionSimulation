@@ -5,6 +5,7 @@
  */
 package UI;
 
+import Graph.Graph;
 import Population.Population;
 import Simulation.PopulationPaintPanel;
 import java.awt.BorderLayout;
@@ -13,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,6 +39,7 @@ public class Dashboard extends javax.swing.JFrame {
     private JPanel simPanel, simRestartPanel;
      private JPanel simPanel2; //for sars
     boolean firstRun,restartFlag;
+    Graph graph;
     Rectangle groupBox = new Rectangle(100, 100, 100, 100);
     /**
      * Creates new form Dashboard
@@ -56,7 +57,8 @@ public void initializeSimulation(){
 
 //Fetch the user defined parameters    
         populationNum = populationSlider.getValue();
-        
+//            populationNum =5;
+
         if(checkSelectAll.isSelected()){
             maskCheck=true;
             vaccineCheck=true;
@@ -110,8 +112,8 @@ public void initializeSimulation(){
             restartFlag=false;
         }
            
-         simPanel = new PopulationPaintPanel(population,labelMap, factorMap,groupEvent,groupBox);
-         simPanel2 = new PopulationPaintPanel(population,labelMap, factorMap,groupEvent,groupBox);
+         simPanel = new PopulationPaintPanel(population,labelMap, factorMap,groupEvent,groupBox,populationNum);
+         simPanel2 = new PopulationPaintPanel(population,labelMap, factorMap,groupEvent,groupBox,populationNum);
         
     
         panelSarsCovSim.setLayout(new BorderLayout());
@@ -195,7 +197,8 @@ Population Parameters:
             conditionMap.put("compareVirus", compareVirus);
             conditionMap.put("infected", infected);
        
-   population[i] = new Population((int) (Math.random() * (width - 10)), (int) (Math.random() * (height - 10)),conditionMap,hospitalCapacity,groupEvent,groupBox);           
+            graph=new Graph();
+   population[i] = new Population((int) (Math.random() * (width - 10)), (int) (Math.random() * (height - 10)),conditionMap,hospitalCapacity,groupEvent,groupBox,populationNum,graph);           
         }
 
 
@@ -1094,13 +1097,16 @@ Population Parameters:
         checkSocialDistancing.setEnabled(true);
         checkSelectAll.setEnabled(true);
         
-        for (int i = 0; i < population.length; i++) {
-            Map<String, Integer> map = population[i].getCodeDash();
-            for (String name : map.keySet()) {
-                String value = map.get(name).toString();
-                System.out.println("Dashboard " + name + " " + value);
-            }
-        }
+//        for (int i = 0; i < population.length; i++) {
+//            Map<String, Integer> map = population[i].getCodeDash();
+//            for (String name : map.keySet()) {
+//                String value = map.get(name).toString();
+//                System.out.println("Dashboard " + name );
+//                
+//            }
+//        }
+       graph.printGraph();
+        
     }//GEN-LAST:event_buttonStopActionPerformed
 
     private void checkGroupEventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkGroupEventActionPerformed
