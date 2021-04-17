@@ -35,6 +35,7 @@ public class PopulationPaintPanel extends JPanel{
     int mark;
     String populationMessage="";
     JLabel populationLabel, labelHealthy,labelSevere, labelRecovered, labelDead, labelInfected;
+    JLabel labelSARHealthy,labelSARSevere, labelSARRecovered, labelSARDead, labelSARInfected;
     int infectedQuarantineNum;//infectedQuarantineNum - No of infected people that qurantine when qurantine is checked .
     boolean quarantineCheck,testingCheck;
     Rectangle groupBox;boolean groupEvent;
@@ -49,6 +50,11 @@ public class PopulationPaintPanel extends JPanel{
         this.labelRecovered=labels.get("recovered");
         this.labelDead=labels.get("dead");
         this.labelInfected = labels.get("infected");
+        this.labelSARHealthy=labels.get("healthySAR");
+        this.labelSARSevere=labels.get("severeSAR");
+        this.labelSARRecovered=labels.get("recoveredSAR");
+        this.labelSARDead=labels.get("deadSAR");
+        this.labelSARInfected = labels.get("infectedSAR");
         this.infectedQuarantineNum = (int)(0.2 * people.length);
         this.quarantineCheck = factors.get("quarantineCheck");
         this.testingCheck = factors.get("testingCheck");
@@ -66,12 +72,13 @@ public class PopulationPaintPanel extends JPanel{
        recovered=0;
        dead=0;
        asymptoticPeople=0;
-       final BasicStroke wideStroke = new BasicStroke(8.0f);
-       
+       boolean compareSAR =people[0].isCompareVirus();
        for (int i = 0; i < people.length; i++) {
+           
             switch (people[i].getStatus()) {
                 case 0:
                     page.setColor(Color.green);
+                    
                     healthy++;
                     break;
                 case 1:
@@ -119,13 +126,19 @@ public class PopulationPaintPanel extends JPanel{
                 }
             }
        }
-
+        if(!compareSAR){     
         labelHealthy.setText(String.valueOf(healthy));
         labelDead.setText(String.valueOf(dead));
         labelRecovered.setText(String.valueOf(recovered));
         labelInfected.setText(String.valueOf(infected));
         labelSevere.setText(String.valueOf(hospitalized));
-  
+        }else{
+         labelSARHealthy.setText(String.valueOf(healthy));
+        labelSARDead.setText(String.valueOf(dead));
+        labelSARRecovered.setText(String.valueOf(recovered));
+        labelSARInfected.setText(String.valueOf(infected));
+        labelSARSevere.setText(String.valueOf(hospitalized));           
+        }
         
         populationLabel.setText("Population Count:"+people.length);
       
