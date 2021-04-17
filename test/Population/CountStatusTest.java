@@ -81,7 +81,7 @@ public class CountStatusTest {
         conditions.put("infected", true);
         conditions.put("quarantine", true);
         conditions.put("vaccinated", true);
-        instance = new Population(100, 100, conditions, 500);
+        //instance = new Population(100, 100, conditions, 500);
     }
 
     @After

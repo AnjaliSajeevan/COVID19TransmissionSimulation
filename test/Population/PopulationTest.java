@@ -31,7 +31,7 @@ public class PopulationTest {
 
     @Before
     public void setUp() {
-        instance = new Population(100, 100, conditions, 500);
+        //instance = new Population(100, 100, conditions, 500);
     }
     
     @After
