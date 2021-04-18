@@ -60,7 +60,7 @@ public class Dashboard extends javax.swing.JFrame {
         labelHealthy.setText(String.valueOf(populationSlider.getValue()));
         labelSarHealthy.setText(String.valueOf(populationSlider.getValue()));
         try{
-        Ini configuration = new Ini(new File("C:\\Users\\anjal\\Desktop\\Documents\\Study Materials\\Northeastern University\\Spring2021\\ProgramStructuresAndAlgorithms\\Project\\Git\\FinalProject_INFO6205\\src\\UI\\config.ini"));
+        Ini configuration = new Ini(new File("config.ini"));
         quarantinePercentage = Double.parseDouble(configuration.get("otherConditions","quarantinePercentage"));
         comorbidPercentage = Double.parseDouble(configuration.get("infectionParameters","comorbidPercentage"));
         hospitalCap = Double.parseDouble(configuration.get("otherConditions","hospitalCapacity"));
