@@ -24,31 +24,25 @@ public class Graph {
     }
     
     
-    public boolean AddEdge(Vertex v1, Vertex v2){
-        boolean result = false;
-       boolean flag=false;
-              for(Edge e : v1.getEdges()){
-               if(e.getDestVertex().getName().equals(v2.getName())){
-//                     System.out.println("Inside add edge true");
-               result=false;
-               flag=true;
-            }
-               
-    }      if(flag==false){
-                   result = v1.getEdges().add(new Edge(v2));
-               }
-//    System.out.println("Add edge flag:"+flag);
-//              System.out.println("Add edge:"+result);
+    public boolean AddEdge(String v1, String v2){
+       boolean result = false;
+       Vertex a1=null;
+       Vertex a2=null;
+       a1=getVertex(v1);
+       a2=getVertex(v2);
+
+     result = a1.getEdges().add(new Edge(a2));
+                   
+                    
               return result;
     }
     
     public boolean checkVertex(String x) {
-//        System.out.println("Hello");
+
         boolean result = false;
         for (Vertex s : nodes) {
-//        System.out.println("Hi");
+
             if (x.equalsIgnoreCase(s.getName())) {
-//            System.out.println("Inside string s "+x+"vertex:"+s.getName());
                 return true;
             } else {
                 result = false;

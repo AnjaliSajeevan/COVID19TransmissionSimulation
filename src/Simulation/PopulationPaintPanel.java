@@ -5,18 +5,16 @@
  */
 package Simulation;
 
+import Graph.Graph;
 import Population.Population;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
 import java.util.Map;
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingWorker;
 
 
 /**
@@ -41,8 +39,11 @@ public class PopulationPaintPanel extends JPanel{
     boolean quarantineCheck,testingCheck;
     Rectangle groupBox;boolean groupEvent;
     int populationNum;
+    Graph graph;
+    ArrayList<GraphPlot> points =new ArrayList<GraphPlot>();
+    int time=0;
             
-    public PopulationPaintPanel(Population[] people, Map<String,JLabel> labels, Map<String,Boolean> factors,boolean groupEvent,Rectangle groupBox,Map<String,Integer> parametersMap,double infectedQuarantinePercentage){
+    public PopulationPaintPanel(Population[] people, Map<String,JLabel> labels, Map<String,Boolean> factors,boolean groupEvent,Rectangle groupBox,Map<String,Integer> parametersMap,double infectedQuarantinePercentage,Graph graph){
         
         this.people=people;
         this.populationLabel=labels.get("population");
@@ -65,12 +66,13 @@ public class PopulationPaintPanel extends JPanel{
         this.ballW = parametersMap.get("populationBallWidth");
         this.asymptoticFraction = parametersMap.get("asymptoticFraction");
         this.infectedQuarantinePercentage = infectedQuarantinePercentage;
+        this.graph=graph;
 
     }
     public void paintComponent(Graphics page) {
         
   super.paintComponents(page);
-        // Draw people (normal)
+       time+=20;
        healthy = 0;
        infected=0;
        hospitalized=0;
@@ -126,11 +128,14 @@ public class PopulationPaintPanel extends JPanel{
                     if(people[j].isQuarantined()){
                         people[i].ignoreCheck();
                     }else{
-                    infectedQuarantineNum = people[i].check(people[j],infectedQuarantineNum,quarantineCheck);
+                    infectedQuarantineNum = people[i].check(people[j],infectedQuarantineNum,quarantineCheck,graph);
                     }
                 }
             }
        }
+       
+        points.add(new GraphPlot(time/100,infected));
+        
         if(!compareSAR){     
         labelHealthy.setText(String.valueOf(healthy));
         labelDead.setText(String.valueOf(dead));
@@ -146,16 +151,19 @@ public class PopulationPaintPanel extends JPanel{
         }
         
         populationLabel.setText("Population Count:"+people.length);
-      
+        
+        //graph plot
+         for(GraphPlot p:points){
+              page.setColor(Color.RED);
+           page.fillOval(p.time,685-p.infectedNumbers/2,5,5);
+         }
+         //groupEvent
         if (groupEvent == true) {
             Graphics2D g2 = (Graphics2D) page;
             page.setColor(Color.BLACK);
             g2.draw(groupBox);
-            
-            
-//graph
-        
+
         }
-    }
     
+    }
 }

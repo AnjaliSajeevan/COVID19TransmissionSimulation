@@ -37,14 +37,13 @@ public class Population {
     private String code;
     private int Collisioncount=0;
     Map<String,Integer> map= new HashMap<String,Integer>();
-    Graph graph;
 
-    public Population(int x, int y,Map<String,Boolean> conditions ,int hospitalCapacity,boolean groupEvent,Rectangle groupBox,int populationNum,Graph graph,boolean compareVirus,int r_naught) {
+
+    public Population(int x, int y,Map<String,Boolean> conditions ,int hospitalCapacity,boolean groupEvent,Rectangle groupBox,int populationNum,boolean compareVirus,int r_naught) {
         this.x = x;
         this.y = y;
         this.groupEvent=groupEvent;
         this.groupBox=groupBox;
-        this.graph=graph;
         this.r_naught = r_naught;
         this.infectCount = 0;
         this.compareVirus = compareVirus; //Sar Virus(Type2 virus)
@@ -75,7 +74,6 @@ public class Population {
         }
         uniqueCode();
         this.populationNum=populationNum;
-        this.graph=graph;
        
         
     }
@@ -178,31 +176,11 @@ public class Population {
         }
     }
 
-    public int check(Population p, int infectedQuarantineNum, boolean quarantineCheck){
-        Vertex v1 = null;
-        Vertex v2 = null;
+    public int check(Population p, int infectedQuarantineNum, boolean quarantineCheck,Graph graph){
+     
         if (!ignore) {
             if (Math.sqrt(Math.pow(x - p.getX(), 2) + Math.pow(y - p.getY(), 2)) < 10) {
-                if (graph.checkVertex(p.code) == false) {
-                    v1 = new Vertex(p.code);
-                    graph.AddVertex(v1);
-                } else  {
-
-                    v1 = graph.getVertex(p.code);
-                }
-                
-//                System.out.println(" Name of V1: "+v1.getName());
-                
-                if (graph.checkVertex(code) == false) {
-                    v2 = new Vertex(code);
-                    graph.AddVertex(v2);
-                } else {
-
-                    v2 = graph.getVertex(code);
-                }
-                
-//                System.out.println(" Name of V2: "+v2.getName());
-                graph.AddEdge(v1, v2);
+              
                 
                 if(quarantineCheck){
                 if (p.getStatus() == 1 && Math.random() < 0.85 && (status == 0 || status==3 || status ==5) && (this.quarantined==false)) {
@@ -232,9 +210,11 @@ public class Population {
                                  
                             }
                     }else{
+                        
                         if(r_naught > 0){
                             if(p.getInfectCount() < r_naught){
                                 status = 1;
+                                contactTracing(graph,p);
                                 tempCount = p.getInfectCount();
                                 p.setInfectCount(++tempCount);
                                 infectCount =0;
@@ -246,6 +226,7 @@ public class Population {
                             }
                         }else{    
                         status = 1;
+                        contactTracing(graph,p);
                         this.setInfectTime();
                         if(infectedQuarantineNum > 0){
                             this.quarantined=true;
@@ -276,6 +257,7 @@ public class Population {
                         if(r_naught > 0){
                             if(p.getInfectCount() < r_naught){
                                 status = 1;
+                                contactTracing(graph,p);
                                 tempCount = p.getInfectCount();
                                 p.setInfectCount(++tempCount);
                                 infectCount =0;
@@ -283,6 +265,7 @@ public class Population {
                             }
                         }else{ 
                             status = 1;
+                            contactTracing(graph,p);
                             this.setInfectTime();
                         } 
                     }
@@ -306,9 +289,7 @@ public class Population {
                     firstInfected = false;
                 }
             }
-//            graph.printGraph();
-//        Collisioncount+=1;    
-//        map.put(code, Collisioncount);
+
        
         } else {
             if(!((vaccinated) && (!prone))){
@@ -326,6 +307,18 @@ public class Population {
         if (!firstInfected) {
             status = 2;
         }
+    }
+    
+    public void contactTracing(Graph graph, Population p){
+    if (graph.checkVertex(p.code) == false) {    
+                    graph.AddVertex(new Vertex(p.code));
+                }
+                
+                if (graph.checkVertex(code) == false) {
+                    graph.AddVertex(new Vertex(code));
+
+                }
+                graph.AddEdge(p.code, code);
     }
 
     public void kill() {
