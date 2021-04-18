@@ -49,7 +49,10 @@ public class Dashboard extends javax.swing.JFrame {
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         firstRun=true;
-        restartFlag=false;      
+        restartFlag=false;   
+        
+        labelHealthy.setText(String.valueOf(populationSlider.getValue()));
+        labelSarHealthy.setText(String.valueOf(populationSlider.getValue()));
     }
 
 public void initializeSimulation(){
@@ -556,6 +559,11 @@ Population Parameters:
         populationSlider.setMinimum(50);
         populationSlider.setPaintLabels(true);
         populationSlider.setPaintTicks(true);
+        populationSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                populationSliderStateChanged(evt);
+            }
+        });
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(0, 0, 139));
@@ -1141,7 +1149,7 @@ Population Parameters:
         labelHealthy.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelHealthy.setForeground(new java.awt.Color(0, 0, 139));
         labelHealthy.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelHealthy.setText("50");
+        labelHealthy.setText("0");
 
         javax.swing.GroupLayout jPanel25Layout = new javax.swing.GroupLayout(jPanel25);
         jPanel25.setLayout(jPanel25Layout);
@@ -1188,7 +1196,7 @@ Population Parameters:
         labelSarHealthy.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         labelSarHealthy.setForeground(new java.awt.Color(0, 0, 139));
         labelSarHealthy.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelSarHealthy.setText("50");
+        labelSarHealthy.setText("0");
 
         javax.swing.GroupLayout jPanel27Layout = new javax.swing.GroupLayout(jPanel27);
         jPanel27.setLayout(jPanel27Layout);
@@ -1994,6 +2002,8 @@ Population Parameters:
         buttonResume.setEnabled(false);
         buttonStop.setEnabled(true);
         
+        populationSlider.setEnabled(false);
+        
         if(firstRun){
              initializeSimulation();
              firstRun=false;
@@ -2016,6 +2026,8 @@ Population Parameters:
         buttonStart.setEnabled(false);
         buttonResume.setEnabled(true);
         buttonPause.setEnabled(false);
+        
+        populationSlider.setEnabled(true);
     }//GEN-LAST:event_buttonPauseActionPerformed
 
     private void buttonResumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonResumeActionPerformed
@@ -2024,6 +2036,8 @@ Population Parameters:
         paused=false;
         buttonResume.setEnabled(false);
         buttonPause.setEnabled(true);
+        
+        populationSlider.setEnabled(false);
     }//GEN-LAST:event_buttonResumeActionPerformed
 
     private void buttonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStopActionPerformed
@@ -2042,6 +2056,8 @@ Population Parameters:
         checkQuarantine.setEnabled(true);
         checkSocialDistancing.setEnabled(true);
         checkSelectAll.setEnabled(true);
+        
+        populationSlider.setEnabled(true);
         
 //        for (int i = 0; i < population.length; i++) {
 //            Map<String, Integer> map = population[i].getCodeDash();
@@ -2063,6 +2079,11 @@ Population Parameters:
            groupEvent=true;
         }
     }//GEN-LAST:event_checkGroupEventActionPerformed
+
+    private void populationSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_populationSliderStateChanged
+        labelHealthy.setText(String.valueOf(populationSlider.getValue()));
+        labelSarHealthy.setText(String.valueOf(populationSlider.getValue()));
+    }//GEN-LAST:event_populationSliderStateChanged
 
     /**
      * @param args the command line arguments
