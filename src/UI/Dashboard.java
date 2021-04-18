@@ -12,6 +12,8 @@ import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import org.ini4j.Ini;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JFrame;
@@ -31,6 +33,10 @@ public class Dashboard extends javax.swing.JFrame {
     Population[] population,populationSAR;
     Map<String,Boolean> factorMap = new HashMap<String,Boolean>();
     Map<String,JLabel> labelMap = new HashMap<String,JLabel>();
+    Map<String,Integer> parametersMap = new HashMap<String,Integer>();
+    double quarantinePercentage,comorbidPercentage,hospitalCap,vaccinatedPercentage,vaccineEffectiveness,
+            infectionR,infectedQuarantinePercentage;
+    int asymptoticFraction,populationBallHeight,populationBallWidth;
     Timer timer;
     private int count, quarantinedNum,comorbidityNum,r_naught,timerTriggers,recordRate = 2;
     private boolean paused = false, maskCheck=false, testingCheck=false, vaccineCheck=false, 
@@ -53,9 +59,26 @@ public class Dashboard extends javax.swing.JFrame {
         
         labelHealthy.setText(String.valueOf(populationSlider.getValue()));
         labelSarHealthy.setText(String.valueOf(populationSlider.getValue()));
+        try{
+        Ini configuration = new Ini(new File("/Users/karthik/NetBeansProjects/FinalProject_INFO6205/src/UI/config.ini"));
+        quarantinePercentage = Double.parseDouble(configuration.get("otherConditions","quarantinePercentage"));
+        comorbidPercentage = Double.parseDouble(configuration.get("infectionParameters","comorbidPercentage"));
+        hospitalCap = Double.parseDouble(configuration.get("otherConditions","hospitalCapacity"));
+        vaccinatedPercentage = Double.parseDouble(configuration.get("vaccineParameters","vaccinatedPercentage"));
+        vaccineEffectiveness = Double.parseDouble(configuration.get("vaccineParameters","vaccineEffectiveness"));
+        infectionR = Double.parseDouble(configuration.get("infectionParameters","infectionRate"));
+        asymptoticFraction = Integer.parseInt(configuration.get("infectionParameters","asymptoticFraction"));
+        infectedQuarantinePercentage = Double.parseDouble(configuration.get("infectionParameters","infectedQuarantinePercentage"));
+        populationBallHeight = Integer.parseInt(configuration.get("ballParameters","populationBallHeight"));
+        populationBallWidth = Integer.parseInt(configuration.get("ballParameters","populationBallWidth"));
+        }catch(Exception e){
+            System.out.println("Error reading ini file!");
+        }
+
     }
 
 public void initializeSimulation(){
+  //  int quarantinePercentage = configuration.get("parameters","quarantinePercentage");
 
 //Fetch the user defined parameters    
         populationNum = populationSlider.getValue();
@@ -101,6 +124,12 @@ public void initializeSimulation(){
         labelMap.put("severeSAR", labelSARSevere);
         labelMap.put("recoveredSAR", labelSARRecovered);
         labelMap.put("deadSAR", labelSARRecovered1);
+ 
+        parametersMap.put("populationNum", populationNum);  
+        parametersMap.put("populationBallHeight", populationBallHeight);
+        parametersMap.put("populationBallWidth", populationBallWidth);
+        parametersMap.put("asymptoticFraction", asymptoticFraction);
+
         
 //Update Parameters in the Result Pane        
         parameters = "Population:"+populationNum;
@@ -123,9 +152,9 @@ public void initializeSimulation(){
             restartFlag=false;
         }
            
-         simPanel = new PopulationPaintPanel(population,labelMap, factorMap,groupEvent,groupBox,populationNum);
-         simPanel2 = new PopulationPaintPanel(populationSAR,labelMap, factorMap,groupEvent,groupBox,populationNum);
-        
+         simPanel = new PopulationPaintPanel(population,labelMap, factorMap,groupEvent,groupBox,parametersMap,infectedQuarantinePercentage);
+         simPanel2 = new PopulationPaintPanel(populationSAR,labelMap, factorMap,groupEvent,groupBox,parametersMap,infectedQuarantinePercentage);
+
     
         panelSarsCovSim.setLayout(new BorderLayout());
         panelSarsSim.setLayout(new BorderLayout());
@@ -148,9 +177,9 @@ Population Parameters:
 5. Comorbidity condition
 6. compareVirus (true = Sars Virus ; false = Covid Virus)
 */
-        quarantinedNum = (int)((0.2) * populationNum);
-        comorbidityNum = (int) ((0.45)  * populationNum);
-        int hospitalCapacity = (int)((0.2) * populationNum);
+        quarantinedNum = (int)(quarantinePercentage * populationNum);
+        comorbidityNum = (int) (comorbidPercentage  * populationNum);
+        int hospitalCapacity = (int)(hospitalCap * populationNum);
         boolean comorbidity = false;
         boolean distancing = false;
         boolean vaccinated = false;
@@ -160,9 +189,9 @@ Population Parameters:
         boolean prone=true;
         Map<String,Boolean> conditionMap = new HashMap<String,Boolean>();
         int infected1,infected2,infected3;
-        int vaccinatedCount = (int) ((0.5)  * populationNum);
-        int vaccineEffective = (int)((0.94)*vaccinatedCount); // Vaccine effective for 94% of vaccinated population
-        int infectionRate = (int)((0.1)*population.length); // 0.1 population is infected (Eg: 5 in 50, 10 in 100, etc)
+        int vaccinatedCount = (int) (vaccinatedPercentage  * populationNum);
+        int vaccineEffective = (int)(vaccineEffectiveness*vaccinatedCount); // Vaccine effective for 94% of vaccinated population
+        int infectionRate = (int)(infectionR*population.length); // 0.1 population is infected (Eg: 5 in 50, 10 in 100, etc)
         for (int i = 0; i < population.length; i++) {
             if((i!=0) &&(i%infectionRate == 0)){
                 infected = true;

@@ -31,8 +31,9 @@ public class PopulationPaintPanel extends JPanel{
     int hospitalized;
     int recovered;
     int dead;
-    int asymptoticPeople;
-    int mark;
+    double infectedQuarantinePercentage;
+    int asymptoticPeople,asymptoticFraction;
+    int mark, ballH, ballW;
     String populationMessage="";
     JLabel populationLabel, labelHealthy,labelSevere, labelRecovered, labelDead, labelInfected;
     JLabel labelSARHealthy,labelSARSevere, labelSARRecovered, labelSARDead, labelSARInfected;
@@ -41,7 +42,7 @@ public class PopulationPaintPanel extends JPanel{
     Rectangle groupBox;boolean groupEvent;
     int populationNum;
             
-    public PopulationPaintPanel(Population[] people, Map<String,JLabel> labels, Map<String,Boolean> factors,boolean groupEvent,Rectangle groupBox,int populationNum){
+    public PopulationPaintPanel(Population[] people, Map<String,JLabel> labels, Map<String,Boolean> factors,boolean groupEvent,Rectangle groupBox,Map<String,Integer> parametersMap,double infectedQuarantinePercentage){
         
         this.people=people;
         this.populationLabel=labels.get("population");
@@ -55,12 +56,16 @@ public class PopulationPaintPanel extends JPanel{
         this.labelSARRecovered=labels.get("recoveredSAR");
         this.labelSARDead=labels.get("deadSAR");
         this.labelSARInfected = labels.get("infectedSAR");
-        this.infectedQuarantineNum = (int)(0.2 * people.length);
         this.quarantineCheck = factors.get("quarantineCheck");
         this.testingCheck = factors.get("testingCheck");
         this.groupBox=groupBox;
         this.groupEvent=groupEvent;
         this.populationNum=populationNum;
+        this.ballH = parametersMap.get("populationBallHeight");
+        this.ballW = parametersMap.get("populationBallWidth");
+        this.asymptoticFraction = parametersMap.get("asymptoticFraction");
+        this.infectedQuarantinePercentage = infectedQuarantinePercentage;
+
     }
     public void paintComponent(Graphics page) {
         
@@ -84,18 +89,18 @@ public class PopulationPaintPanel extends JPanel{
                 case 1:
                     if(!testingCheck){       //If Testing is checked, all infected person would be prominent.
                         asymptoticPeople++;
-                        if((asymptoticPeople%3)==0){  // Every 3rd person is asymptotic
-                            page.setColor(Color.orange);  
+                        if((asymptoticPeople%asymptoticFraction)==0){  // Every 3rd person is asymptotic
+                            page.setColor(new Color(204,102,102));
                         }else{
-                            page.setColor(new Color(255,135,141));
+                            page.setColor(Color.red);
                         }
                     }else{
-                       page.setColor(Color.pink); 
+                       page.setColor(Color.red); 
                     }
                     infected++;
                     break;
                 case 2:
-                    page.setColor(Color.red);                  
+                    page.setColor(new Color(146,0,10));            
                     hospitalized++;
                     break;
                 case 3:
@@ -113,9 +118,9 @@ public class PopulationPaintPanel extends JPanel{
                     break;
             }
    
-            page.fillOval((int) people[i].getX(), (int) people[i].getY(), 10, 10);
+            page.fillOval((int) people[i].getX(), (int) people[i].getY(), ballH, ballW);
             
-            infectedQuarantineNum = (int)(0.2 * infected);
+            infectedQuarantineNum = (int)(infectedQuarantinePercentage * infected);
             for (int j = 0; j < people.length; j++) {
                 if (i != j) {
                     if(people[j].isQuarantined()){

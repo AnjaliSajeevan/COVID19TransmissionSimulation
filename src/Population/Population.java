@@ -25,7 +25,7 @@ public class Population {
     private double x, y, xTemp, yTemp;
     Rectangle mainPanel = new Rectangle(0, 0, 700, 400);
     private int status; // 0 for healthy, 1 for infected, 2 for hospitalized , 3 for recovered, 4 for dead
-    private int countInfected, hospitalCapacity,countHospitalized,vaccineEffective;
+    private int countInfected, hospitalCapacity,countHospitalized;
     private boolean firstInfected,quarantined,distancing,vaccinated,prone, ignore, comorbidity,compareVirus;
     private double risk;
     private long infectTime;
@@ -38,7 +38,6 @@ public class Population {
     private int Collisioncount=0;
     Map<String,Integer> map= new HashMap<String,Integer>();
     Graph graph;
-
 
     public Population(int x, int y,Map<String,Boolean> conditions ,int hospitalCapacity,boolean groupEvent,Rectangle groupBox,int populationNum,Graph graph,boolean compareVirus,int r_naught) {
         this.x = x;
