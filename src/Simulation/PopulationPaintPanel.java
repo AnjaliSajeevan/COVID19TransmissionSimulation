@@ -72,7 +72,7 @@ public class PopulationPaintPanel extends JPanel{
     public void paintComponent(Graphics page) {
         
   super.paintComponents(page);
-       time+=20;
+       time+=15;
        healthy = 0;
        infected=0;
        hospitalized=0;
@@ -92,7 +92,7 @@ public class PopulationPaintPanel extends JPanel{
                     if(!testingCheck){       //If Testing is checked, all infected person would be prominent.
                         asymptoticPeople++;
                         if((asymptoticPeople%asymptoticFraction)==0){  // Every 3rd person is asymptotic
-                            page.setColor(new Color(204,102,102));
+                            page.setColor(new Color(255,192,203));
                         }else{
                             page.setColor(Color.red);
                         }
@@ -134,7 +134,7 @@ public class PopulationPaintPanel extends JPanel{
             }
        }
        
-        points.add(new GraphPlot(time/100,infected));
+        points.add(new GraphPlot(time/80,infected));
         
         if(!compareSAR){     
         labelHealthy.setText(String.valueOf(healthy));

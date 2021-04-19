@@ -911,7 +911,7 @@ Population Parameters:
         jLabel33.setForeground(new java.awt.Color(0, 0, 139));
         jLabel33.setText("Asymptomatic");
 
-        jPanel58.setBackground(java.awt.Color.orange);
+        jPanel58.setBackground(new java.awt.Color(255, 192, 203));
 
         javax.swing.GroupLayout jPanel58Layout = new javax.swing.GroupLayout(jPanel58);
         jPanel58.setLayout(jPanel58Layout);
@@ -928,7 +928,7 @@ Population Parameters:
         jLabel34.setForeground(new java.awt.Color(0, 0, 139));
         jLabel34.setText("Symptomatic");
 
-        jPanel59.setBackground(new java.awt.Color(255, 135, 141));
+        jPanel59.setBackground(java.awt.Color.red);
 
         javax.swing.GroupLayout jPanel59Layout = new javax.swing.GroupLayout(jPanel59);
         jPanel59.setLayout(jPanel59Layout);
@@ -945,7 +945,7 @@ Population Parameters:
         jLabel35.setForeground(new java.awt.Color(0, 0, 139));
         jLabel35.setText("Hospitalized");
 
-        jPanel60.setBackground(java.awt.Color.red);
+        jPanel60.setBackground(new java.awt.Color(146, 0, 10));
 
         javax.swing.GroupLayout jPanel60Layout = new javax.swing.GroupLayout(jPanel60);
         jPanel60.setLayout(jPanel60Layout);
@@ -2153,7 +2153,6 @@ Population Parameters:
         buttonPause.setEnabled(true);
         buttonResume.setEnabled(false);
         buttonStop.setEnabled(true);
-        
         populationSlider.setEnabled(false);
         
         if(firstRun){
@@ -2195,6 +2194,7 @@ Population Parameters:
     private void buttonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStopActionPerformed
         // TODO add your handling code here:
         timer.stop();
+        
         restartFlag= true;
         paused=true;
         firstRun=true;                         //Resetting Start to firstRun
@@ -2211,14 +2211,6 @@ Population Parameters:
         
         populationSlider.setEnabled(true);
         
-//        for (int i = 0; i < population.length; i++) {
-//            Map<String, Integer> map = population[i].getCodeDash();
-//            for (String name : map.keySet()) {
-//                String value = map.get(name).toString();
-//                System.out.println("Dashboard " + name );
-//                
-//            }
-//        }
        graph.printGraph();
         
     }//GEN-LAST:event_buttonStopActionPerformed
