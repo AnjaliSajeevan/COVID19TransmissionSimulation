@@ -104,7 +104,11 @@ public void initializeSimulation(){
         }else{
             delay=0;
         }
-        r_naught = (int)Double.parseDouble(RNaughtValue.getText());
+        try{
+            r_naught = (int)Double.parseDouble(RNaughtValue.getText());
+        }catch (Exception e){
+            r_naught = 0;
+        }
 
 //Add all factors to factorMap and JLabel to labelMap to be accessed in Panel class.        
         factorMap.put("maskCheck", maskCheck);  
@@ -248,7 +252,11 @@ Population Parameters:
            
     population[i] = new Population((int) (Math.random() * (width - 10)), (int) (Math.random() * (height - 10)),conditionMap,hospitalCapacity,groupEvent,groupBox,populationNum,false,r_naught);           
     populationSAR[i] = new Population((int) (Math.random() * (width - 10)), (int) (Math.random() * (height - 10)),conditionMap,hospitalCapacity,groupEvent,groupBox,populationNum,true,r_naught);           
-    timerSet = Integer.parseInt(timerArea.getText());
+    try{
+        timerSet = Integer.parseInt(timerArea.getText());
+    }catch(Exception e){
+        timerSet = 0;
+    }
         }
 
 
