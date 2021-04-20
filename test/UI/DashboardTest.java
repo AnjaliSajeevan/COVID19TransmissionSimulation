@@ -24,7 +24,7 @@ public class DashboardTest {
     
     @After
     public void tearDown() {
-        instance = null;
+        //instance = null;
     }
 
     /**
@@ -34,8 +34,14 @@ public class DashboardTest {
     public void testInitializeSimulation() {
         // Arrange
         System.out.println("initializeSimulation");
-        
-        instance.initializeSimulation();
+
+        // Act & Assert
+        // [No Assert.DoesNotThrow(() => MyMethod()); in JUnit4. :( ]
+        try {
+            instance.initializeSimulation();
+        } catch (Exception exception){
+            Assert.fail();
+        }
     }
 
     /**
@@ -45,10 +51,15 @@ public class DashboardTest {
     public void testGetSimulation() {
         // Arrange
         System.out.println("getSimulation");
-        //Dashboard.main(null);
         instance.initializeSimulation();
 
-        instance.getSimulation();
+        // Act & Assert
+        // [No Assert.DoesNotThrow(() => MyMethod()); in JUnit4. :( ]
+        try {
+            instance.getSimulation();
+        } catch (Exception exception){
+            Assert.fail();
+        }
     }
 
     /**
@@ -64,7 +75,7 @@ public class DashboardTest {
         // Act & Assert
         // [No Assert.DoesNotThrow(() => MyMethod()); in JUnit4. :( ]
         try {
-            Dashboard.main(args);
+            Dashboard.main(null);
         } catch (Exception exception){
             Assert.fail();
         }

@@ -41,8 +41,8 @@ public class PlotChartJFrameTest {
     public void setUp() {
         map = new TreeMap<>();
         java.util.Map<String, Integer> value = new TreeMap<>();
-        value.put("Healthy", 10);
-        value.put("Infected", 0);
+        value.put("Healthy", 100);
+        value.put("Infected", 10);
 
         map.put(1, value);
 
@@ -93,8 +93,8 @@ public class PlotChartJFrameTest {
         XYDataset result = instance.createDataset();
 
         // Assert
-        assertEquals(10, ((XYSeriesCollection)result).getY(0,0));
-        assertEquals(0, ((XYSeriesCollection)result).getY(1,0));
+        assertEquals(100, ((XYSeriesCollection)result).getY(0,0));
+        assertEquals(10, ((XYSeriesCollection)result).getY(1,0));
     }
     
 }
