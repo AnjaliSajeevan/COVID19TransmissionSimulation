@@ -9,6 +9,8 @@ package Simulation;
  *
  * @author Anjali
  */
+
+
 public class GraphPlot {
    int time,infectedNumbers;
 

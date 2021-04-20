@@ -23,7 +23,7 @@ public class Graph {
         return nodes.add(v);
     }
     
-    
+    //Adding edges into to the vertex
     public boolean AddEdge(String v1, String v2){
         boolean result = false;
         Vertex a1=null;
@@ -34,8 +34,8 @@ public class Graph {
         return result;
     }
     
+    //Checking if vertex is already existing
     public boolean checkVertex(String x) {
-        
         boolean result = false;
         for (Vertex s : nodes) {
 
@@ -58,6 +58,7 @@ public class Graph {
         return result;
     }
 
+     //To diplay the contact tracing result on the console
     public void printGraph(){
         System.out.println("---------------------Contact Tracing------------------------------");
         for(Vertex v : nodes){

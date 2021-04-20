@@ -71,9 +71,9 @@ public class PopulationPaintPanel extends JPanel{
     }
 
     @Override
-    public void paintComponent(Graphics page) {
+    public void paintComponent(Graphics g) {
         
-        super.paintComponents(page);
+        super.paintComponents(g);
         time+=15;
         healthy = 0;
         infected=0;
@@ -88,42 +88,42 @@ public class PopulationPaintPanel extends JPanel{
 
             switch (people[i].getStatus()) {
                 case 0:                                  //Healthy condition
-                    page.setColor(Color.green);
+                    g.setColor(Color.green);
                     healthy++;
                     break;
                 case 1:                                //Infected condition
                     if(!testingCheck){       //If Testing is checked, all infected person would be prominent.
                         asymptoticPeople++;
                         if((asymptoticPeople%asymptoticFraction)==0){  // Every 3rd person is asymptotic
-                            page.setColor(new Color(255,192,203));
+                            g.setColor(new Color(255,192,203));
                         }else{
-                            page.setColor(Color.red);
+                            g.setColor(Color.red);
                         }
                     }else{
-                       page.setColor(Color.red);
+                       g.setColor(Color.red);
                     }
                     infected++;
                     break;
                 case 2:                                 //Severe or Hospitalized
-                    page.setColor(new Color(146,0,10));
+                    g.setColor(new Color(146,0,10));
                     hospitalized++;
                     break;
                 case 3:                               //Recovered
-                    page.setColor(Color.green);
+                    g.setColor(Color.green);
                     recovered++;
                     break;
                 case 4:                              //Dead
-                    page.setColor(Color.gray);
+                    g.setColor(Color.gray);
                     dead++;
                     break;
                 case 5:                              //Vaccinated person
-                    page.setColor(new Color(41,171,135));
+                    g.setColor(new Color(41,171,135));
                     healthy++;
 
                     break;
             }
 
-            page.fillOval((int) people[i].getX(), (int) people[i].getY(), ballH, ballW);
+            g.fillOval((int) people[i].getX(), (int) people[i].getY(), ballH, ballW);
 
             infectedQuarantineNum = (int)(infectedQuarantinePercentage * infected);
             for (int j = 0; j < people.length; j++) {
@@ -165,17 +165,17 @@ public class PopulationPaintPanel extends JPanel{
             labelSARSevere.setText(String.valueOf(hospitalized));
         }
 
-        //graph plot
+        //real- time graph plot
         for(GraphPlot p:points){
-            page.setColor(Color.RED);
-            page.fillOval(p.time,625-p.infectedNumbers/3,5,5);
+            g.setColor(Color.RED);
+            g.fillOval(p.time,625-p.infectedNumbers/3,5,5);
         }
       
 
         //groupEvent
         if (groupEvent == true) {
-            Graphics2D g2 = (Graphics2D) page;
-            page.setColor(Color.BLACK);
+            Graphics2D g2 = (Graphics2D) g;
+            g.setColor(Color.BLACK);
             g2.draw(groupBox);
         }
     }

@@ -21,8 +21,6 @@ public class Vertex {
         edgeList = new LinkedList<>();
     }
 
-
-
     public String getName(){
         return name;
     }
