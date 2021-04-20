@@ -20,7 +20,6 @@ import java.util.Map;
  * @author Manasa
  */
 public class Population {
-    
 
     private double x, y, xTemp, yTemp;
     Rectangle mainPanel = new Rectangle(0, 0, 700, 400);
@@ -39,7 +38,11 @@ public class Population {
     Map<String,Integer> map= new HashMap<String,Integer>();
 
 
-    public Population(int x, int y,Map<String,Boolean> conditions ,int hospitalCapacity,boolean groupEvent,Rectangle groupBox,int populationNum,boolean compareVirus,int r_naught) {
+    public Population(int x, int y,Map<String,Boolean> conditions,
+        int hospitalCapacity,boolean groupEvent,
+        Rectangle groupBox,int populationNum,
+        boolean compareVirus,int r_naught) {
+
         this.x = x;
         this.y = y;
         this.groupEvent=groupEvent;
@@ -52,30 +55,32 @@ public class Population {
         this.prone = conditions.get("prone");
         risk = Math.random();
         this.distancing = conditions.get("distancingCheck");
+
         if(distancing){     //Displacement is less to keep distance from others.
-        xTemp = 0.4;
-        yTemp = Math.sqrt(4 - Math.pow(xTemp, 2)) * (Math.random() < 0.5 ? -0.4 : 0.4);
+            xTemp = 0.4;
+            yTemp = Math.sqrt(4 - Math.pow(xTemp, 2)) * (Math.random() < 0.5 ? -0.4 : 0.4);
         }else{          //Usually displacement between 0.4 to 1.9
-        xTemp = Math.random() * 4.0 - 2.0;
-        yTemp = Math.sqrt(4 - Math.pow(xTemp, 2)) * (Math.random() < 0.5 ? -1.0 : 1.0);
+            xTemp = Math.random() * 4.0 - 2.0;
+            yTemp = Math.sqrt(4 - Math.pow(xTemp, 2)) * (Math.random() < 0.5 ? -1.0 : 1.0);
         }
         countInfected = 0;
         countHospitalized = 0;
         status = (conditions.get("infected") ? 1 : 0);
         firstInfected = conditions.get("infected");
         this.quarantined = conditions.get("quarantine");
+
         if(compareVirus){
             vaccinated = false;
         }else{             
-        this.vaccinated = conditions.get("vaccinated");
+            this.vaccinated = conditions.get("vaccinated");
         }
+
         if(vaccinated){
             status = 5;
         }
+
         uniqueCode();
         this.populationNum=populationNum;
-       
-        
     }
     
     public Map getCodeDash() {
@@ -85,7 +90,7 @@ public class Population {
     public String uniqueCode() {
         List<Integer> numbers = new ArrayList();
         for(int i = 0; i < 10; i++){
-        numbers.add(i);
+            numbers.add(i);
         }
 
         Collections.shuffle(numbers);
@@ -94,10 +99,10 @@ public class Population {
         for (int i = 0; i < 6; i++) {
             result += numbers.get(i).toString();
             code = 'A' + result;
-    }
+        }
+
         return code;
     }
-    
 
     public void countStatus() {
         x_f = x + xTemp;
@@ -106,44 +111,41 @@ public class Population {
             return;
         }
         if ((status != 2 && status != 4) && (!quarantined)) {
-                if (groupEvent == true) {
-                   
-                    if (groupBox.contains(x, y) == true) {
-                        if (groupBox.contains(x_f, y_f) == false) {
+            if (groupEvent == true) {
 
-                            if (x_f < groupBox.x || x_f > groupBox.width) {
-                                xTemp = -xTemp;
-                            }
-                            if (y_f < groupBox.y || y_f > groupBox.height) {
-                                yTemp = -yTemp;
-                            }
-                        }
-                    } else {
-                        if (x + xTemp > mainPanel.width || x + xTemp < 0) {
+                if (groupBox.contains(x, y) == true) {
+                    if (groupBox.contains(x_f, y_f) == false) {
+                        if (x_f < groupBox.x || x_f > groupBox.width) {
                             xTemp = -xTemp;
                         }
-                        if (y + yTemp > mainPanel.height || y + yTemp < 0) {
+                        if (y_f < groupBox.y || y_f > groupBox.height) {
                             yTemp = -yTemp;
                         }
-                        }
                     }
-
-
-
-                if (groupEvent == false) {
-
-                    if (x + xTemp + 10 > mainPanel.width || x + xTemp < 0) {
+                } else {
+                    if (x + xTemp > mainPanel.width || x + xTemp < 0) {
                         xTemp = -xTemp;
                     }
-                    if (y + yTemp + 10 > mainPanel.height || y + yTemp < 0) {
+                    if (y + yTemp > mainPanel.height || y + yTemp < 0) {
                         yTemp = -yTemp;
                     }
-
                 }
+            }
+
+            if (groupEvent == false) {
+
+                if (x + xTemp + 10 > mainPanel.width || x + xTemp < 0) {
+                    xTemp = -xTemp;
+                }
+                if (y + yTemp + 10 > mainPanel.height || y + yTemp < 0) {
+                    yTemp = -yTemp;
+                }
+            }
 
             x += xTemp;
             y += yTemp;
         }
+
        double difference = ((System.currentTimeMillis()) - (this.getInfectTime())) / 1000F;
         if (!firstInfected) {
             if (status == 1) {//infected     
@@ -168,10 +170,10 @@ public class Population {
                         status = 4;
                     }
                 }
-            } else if(infectTime >= 5 ){ {//recovered
-                    status = 3;
-                    quarantined=false;
-                }
+            } else if(infectTime >= 5 ){ //recovered
+                status = 3;
+                quarantined=false;
+
             }
         }
     }
@@ -180,10 +182,12 @@ public class Population {
      
         if (!ignore) {
             if (Math.sqrt(Math.pow(x - p.getX(), 2) + Math.pow(y - p.getY(), 2)) < 10) {
-              
                 
                 if(quarantineCheck){
-                if (p.getStatus() == 1 && Math.random() < 0.85 && (status == 0 || status==3 || status ==5) && (this.quarantined==false)) {
+                if (p.getStatus() == 1 &&
+                        Math.random() < 0.85 &&
+                        (status == 0 || status==3 || status ==5) &&
+                        (this.quarantined==false)) {
                     if(compareVirus){
                         double infectTime = ((System.currentTimeMillis()) - (p.getInfectTime())) / 1000F;
                             if(infectTime >=3){
@@ -200,14 +204,13 @@ public class Population {
                                         }                                         
                                     }
                                 }else{
-                                        status = 1;
-                                        this.setInfectTime();
-                                        if(infectedQuarantineNum > 0){
-                                            this.quarantined=true;
-                                            infectedQuarantineNum--;
-                                        }                                    
+                                    status = 1;
+                                    this.setInfectTime();
+                                    if(infectedQuarantineNum > 0){
+                                        this.quarantined=true;
+                                        infectedQuarantineNum--;
+                                    }
                                 }
-                                 
                             }
                     }else{
                         
@@ -225,17 +228,17 @@ public class Population {
                                 }                                         
                             }
                         }else{    
-                        status = 1;
-                        contactTracing(graph,p);
-                        this.setInfectTime();
-                        if(infectedQuarantineNum > 0){
-                            this.quarantined=true;
-                            infectedQuarantineNum--;
+                            status = 1;
+                            contactTracing(graph,p);
+                            this.setInfectTime();
+                            if(infectedQuarantineNum > 0){
+                                this.quarantined=true;
+                                infectedQuarantineNum--;
+                            }
                         }
                     }
-                    }
                 }
-                }else{
+            }else{
                 if (p.getStatus() == 1 && Math.random() < 0.85 && (status == 0 || status==3 || status==5) ) {
                     if(compareVirus){
                         double infectTime = ((System.currentTimeMillis()) - (p.getInfectTime())) / 1000F;
@@ -269,8 +272,9 @@ public class Population {
                             this.setInfectTime();
                         } 
                     }
-                    }
                 }
+            }
+
                 if ((!quarantined) &&  (status != 2) ) {
                     if(distancing){     //Displacement is less to keep distance from others.
                         xTemp = (Math.random() * 2 * (x - p.getX() < 0 ? -0.4 : 0.4));
@@ -281,16 +285,15 @@ public class Population {
                         p.ignoreCheck();
                     }
                 }
+
                 if((vaccinated) && (!prone)){
                     p.ignoreCheck();
-                    
                 }
                 if (firstInfected) {
                     firstInfected = false;
                 }
             }
 
-       
         } else {
             if(!((vaccinated) && (!prone))){
             ignore = false;
@@ -310,15 +313,16 @@ public class Population {
     }
     
     public void contactTracing(Graph graph, Population p){
-    if (graph.checkVertex(p.code) == false) {    
-                    graph.AddVertex(new Vertex(p.code));
-                }
+        if (graph.checkVertex(p.code) == false) {
+            graph.AddVertex(new Vertex(p.code));
+        }
                 
-                if (graph.checkVertex(code) == false) {
-                    graph.AddVertex(new Vertex(code));
+        if (graph.checkVertex(code) == false) {
+            graph.AddVertex(new Vertex(code));
 
-                }
-                graph.AddEdge(p.code, code);
+        }
+
+        graph.AddEdge(p.code, code);
     }
 
     public void kill() {
@@ -360,7 +364,6 @@ public class Population {
     public void setQuarantined(boolean quarantined) {
         this.quarantined = quarantined;
     }
-    
 
     public long getInfectTime() {
         return this.infectTime;
@@ -406,7 +409,22 @@ public class Population {
     public int getInfectCount() {
         return infectCount;
     }
+
     public void setInfectCount(int count) {
         this.infectCount=count;
+    }
+
+    public int getR_Naught(){
+        return r_naught;
+    }
+
+    @Override
+    public String toString() {
+        return "Population{" +
+                ", status=" + status +
+                ", countInfected=" + countInfected +
+                ", hospitalCapacity=" + hospitalCapacity +
+                ", countHospitalized=" + countHospitalized +
+                '}';
     }
 }

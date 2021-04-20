@@ -25,16 +25,15 @@ public class Graph {
     
     
     public boolean AddEdge(String v1, String v2){
-       boolean result = false;
-       Vertex a1=null;
-       Vertex a2=null;
-       a1=getVertex(v1);
-       a2=getVertex(v2);
+        boolean result = false;
+        Vertex a1=null;
+        Vertex a2=null;
+        a1=getVertex(v1);
+        a2=getVertex(v2);
 
-     result = a1.getEdges().add(new Edge(a2));
-                   
-                    
-              return result;
+        result = a1.getEdges().add(new Edge(a2));
+
+        return result;
     }
     
     public boolean checkVertex(String x) {
@@ -47,23 +46,22 @@ public class Graph {
             } else {
                 result = false;
             }
-
         }
         return result;
     }
     
      public Vertex getVertex(String x){
         Vertex result = null;
-     for (Vertex s : nodes) {
-        if(x.equalsIgnoreCase(s.getName())){
-            result = s;    
+        for (Vertex s : nodes) {
+            if(x.equalsIgnoreCase(s.getName())){
+                result = s;
+            }
         }
-    }
-     return result;
+        return result;
     }
 
     public void printGraph(){
-        //I printed it like this. You can print it however you want though
+
         for(Vertex v : nodes){
             System.out.print("Person: "+ v.getName() + ": ");
             for(Edge e : v.getEdges()){
