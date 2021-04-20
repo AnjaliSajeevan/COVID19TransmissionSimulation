@@ -16,7 +16,6 @@ import java.io.File;
 import org.ini4j.Ini;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -43,8 +42,8 @@ public class Dashboard extends javax.swing.JFrame {
     private int count, quarantinedNum,comorbidityNum,r_naught,timerTriggers,recordRate = 2;
     private boolean paused = false, maskCheck=false, testingCheck=false, vaccineCheck=false, 
             quarantineCheck=false, distancingCheck=false, remoteCheck=false, allCheck=false,groupEvent=false;  
-    private String parameters="",populationType="";
-    private JPanel simPanel, simRestartPanel;
+    private String parameters="";
+    private JPanel simPanel;
      private JPanel simPanel2; //for sars
     boolean firstRun,restartFlag;
     Graph graph;
@@ -198,7 +197,6 @@ public void initializeSimulation(){
         boolean infected = false;
         boolean prone=true;
         Map<String,Boolean> conditionMap = new HashMap<String,Boolean>();
-        int infected1,infected2,infected3;
         int vaccinatedCount = (int) (vaccinatedPercentage  * populationNum);
         int vaccineEffective = (int)(vaccineEffectiveness*vaccinatedCount); // Vaccine effective for 94% of vaccinated population
         int infectionRate = (int)(infectionR*population.length); // 0.1 population is infected (Eg: 5 in 50, 10 in 100, etc)
@@ -330,7 +328,7 @@ public void initializeSimulation(){
                             timerCheck.stop();
                             restartFlag= true;
                             paused=true;
-                            firstRun=true;                         //Resetting Start to firstRun
+                            firstRun=true;                         //Reset Start to firstRun
                             buttonStart.setEnabled(true);
                             buttonStop.setEnabled(false);
                             buttonResume.setEnabled(false);
