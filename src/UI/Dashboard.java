@@ -638,7 +638,7 @@ public void initializeSimulation(){
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(0, 0, 139));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("PLAY, PAUSE, RESUME, STOP");
+        jLabel10.setText("PLAY, PAUSE, RESUME, STOP, PLOT GRAPH");
 
         javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
         jPanel20.setLayout(jPanel20Layout);
@@ -704,6 +704,7 @@ public void initializeSimulation(){
         buttonPlot.setBackground(new java.awt.Color(255, 255, 255));
         buttonPlot.setForeground(new java.awt.Color(0, 0, 139));
         buttonPlot.setText("PLOT");
+        buttonPlot.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         buttonPlot.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPlotActionPerformed(evt);

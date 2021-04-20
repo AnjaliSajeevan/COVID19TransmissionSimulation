@@ -473,7 +473,7 @@
                               <Color blue="8b" green="0" red="0" type="rgb"/>
                             </Property>
                             <Property name="horizontalAlignment" type="int" value="0"/>
-                            <Property name="text" type="java.lang.String" value="PLAY, PAUSE, RESUME, STOP"/>
+                            <Property name="text" type="java.lang.String" value="PLAY, PAUSE, RESUME, STOP, PLOT GRAPH"/>
                           </Properties>
                         </Component>
                       </SubComponents>
@@ -562,6 +562,9 @@
                           <Color blue="8b" green="0" red="0" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="PLOT"/>
+                        <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                          <Color id="Hand Cursor"/>
+                        </Property>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonPlotActionPerformed"/>
