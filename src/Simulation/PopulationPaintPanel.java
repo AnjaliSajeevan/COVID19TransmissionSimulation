@@ -12,7 +12,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -35,16 +37,23 @@ public class PopulationPaintPanel extends JPanel{
     String populationMessage="";
     JLabel populationLabel, labelHealthy,labelSevere, labelRecovered, labelDead, labelInfected;
     JLabel labelSARHealthy,labelSARSevere, labelSARRecovered, labelSARDead, labelSARInfected;
-    int infectedQuarantineNum;//infectedQuarantineNum - No of infected people that qurantine when qurantine is checked .
+    int infectedQuarantineNum;//infectedQuarantineNum - No of infected people that quarantine when quarantine is checked .
     boolean quarantineCheck,testingCheck;
     Rectangle groupBox;boolean groupEvent;
     int populationNum;
     Graph graph;
     ArrayList<GraphPlot> points =new ArrayList<GraphPlot>();
     int time=0;
+
+    Map<Integer, Map<String, Integer>> resultMap;
             
-    public PopulationPaintPanel(Population[] people, Map<String,JLabel> labels, Map<String,Boolean> factors,boolean groupEvent,Rectangle groupBox,Map<String,Integer> parametersMap,double infectedQuarantinePercentage,Graph graph){
-        
+    public PopulationPaintPanel(Population[] people, Map<String,JLabel> labels,
+        Map<String,Boolean> factors,boolean groupEvent,
+        Rectangle groupBox,Map<String,Integer> parametersMap,
+        double infectedQuarantinePercentage,Graph graph){
+
+        resultMap = new TreeMap<>();
+
         this.people=people;
         this.populationLabel=labels.get("population");
         this.labelHealthy=labels.get("healthy");
@@ -69,23 +78,25 @@ public class PopulationPaintPanel extends JPanel{
         this.graph=graph;
 
     }
+
     public void paintComponent(Graphics page) {
         
-  super.paintComponents(page);
-       time+=15;
-       healthy = 0;
-       infected=0;
-       hospitalized=0;
-       recovered=0;
-       dead=0;
-       asymptoticPeople=0;
-       boolean compareSAR =people[0].isCompareVirus();
-       for (int i = 0; i < people.length; i++) {
-           
+        super.paintComponents(page);
+        time+=15;
+        healthy = 0;
+        infected=0;
+        hospitalized=0;
+        recovered=0;
+        dead=0;
+        asymptoticPeople=0;
+
+        boolean compareSAR =people[0].isCompareVirus();
+        for (int i = 0; i < people.length; i++) {
+            Map<String, Integer> map = new HashMap<>();
+
             switch (people[i].getStatus()) {
                 case 0:
                     page.setColor(Color.green);
-                    
                     healthy++;
                     break;
                 case 1:
@@ -97,12 +108,12 @@ public class PopulationPaintPanel extends JPanel{
                             page.setColor(Color.red);
                         }
                     }else{
-                       page.setColor(Color.red); 
+                       page.setColor(Color.red);
                     }
                     infected++;
                     break;
                 case 2:
-                    page.setColor(new Color(146,0,10));            
+                    page.setColor(new Color(146,0,10));
                     hospitalized++;
                     break;
                 case 3:
@@ -116,54 +127,67 @@ public class PopulationPaintPanel extends JPanel{
                 case 5:
                     page.setColor(new Color(41,171,135));
                     healthy++;
-                   
+
                     break;
             }
-   
+
             page.fillOval((int) people[i].getX(), (int) people[i].getY(), ballH, ballW);
-            
+
             infectedQuarantineNum = (int)(infectedQuarantinePercentage * infected);
             for (int j = 0; j < people.length; j++) {
                 if (i != j) {
                     if(people[j].isQuarantined()){
                         people[i].ignoreCheck();
                     }else{
-                    infectedQuarantineNum = people[i].check(people[j],infectedQuarantineNum,quarantineCheck,graph);
+                        infectedQuarantineNum = people[i].check(people[j],infectedQuarantineNum,quarantineCheck,graph);
                     }
                 }
             }
        }
-       
+
+        Map<String, Integer> map = new HashMap<>();
+        map.put("Infected", infected);
+        map.put("Healthy", healthy);
+        map.put("Hospitalized", hospitalized);
+        map.put("Recovered", recovered);
+        map.put("Dead", dead);
+        map.put("Asymptotic", asymptoticPeople);
+
+        if(time % 90 == 0) // 15 is divisible by 90.
+            resultMap.put(time, map);
+
         points.add(new GraphPlot(time/80,infected));
-        
-        if(!compareSAR){     
-        labelHealthy.setText(String.valueOf(healthy));
-        labelDead.setText(String.valueOf(dead));
-        labelRecovered.setText(String.valueOf(recovered));
-        labelInfected.setText(String.valueOf(infected));
-        labelSevere.setText(String.valueOf(hospitalized));
+
+        if(!compareSAR){
+            labelHealthy.setText(String.valueOf(healthy));
+            labelDead.setText(String.valueOf(dead));
+            labelRecovered.setText(String.valueOf(recovered));
+            labelInfected.setText(String.valueOf(infected));
+            labelSevere.setText(String.valueOf(hospitalized));
+
         }else{
-         labelSARHealthy.setText(String.valueOf(healthy));
-        labelSARDead.setText(String.valueOf(dead));
-        labelSARRecovered.setText(String.valueOf(recovered));
-        labelSARInfected.setText(String.valueOf(infected));
-        labelSARSevere.setText(String.valueOf(hospitalized));           
+            labelSARHealthy.setText(String.valueOf(healthy));
+            labelSARDead.setText(String.valueOf(dead));
+            labelSARRecovered.setText(String.valueOf(recovered));
+            labelSARInfected.setText(String.valueOf(infected));
+            labelSARSevere.setText(String.valueOf(hospitalized));
         }
-        
-        populationLabel.setText("Population Count:"+people.length);
-        
+
         //graph plot
-         for(GraphPlot p:points){
-              page.setColor(Color.RED);
-           page.fillOval(p.time,685-p.infectedNumbers/2,5,5);
-         }
-         //groupEvent
+        for(GraphPlot p:points){
+            page.setColor(Color.RED);
+            page.fillOval(p.time,620-p.infectedNumbers/2,5,5);
+        }
+
+        //groupEvent
         if (groupEvent == true) {
             Graphics2D g2 = (Graphics2D) page;
             page.setColor(Color.BLACK);
             g2.draw(groupBox);
-
         }
-    
+    }
+
+    public Map<Integer, Map<String, Integer>> getResultMap(){
+        return resultMap;
     }
 }
