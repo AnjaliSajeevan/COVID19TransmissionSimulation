@@ -11,7 +11,6 @@ import Simulation.PopulationPaintPanel;
 import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import org.ini4j.Ini;
 import java.util.HashMap;
@@ -22,35 +21,41 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 /**
- *
+ * This program has the main() method which starts with this project run. 
+ * Input: Factors considered for simulation(Boolean) : Social Distancing, Quarantine, Remote, Vaccine, Testing, Group Event,etc
+ *             Population count(int) (From the panel slider)
+ *             R-naught value (double)
+ *             Timer value (int) (Optional - If timer needs to be set)
+ * Output: Population count in various health conditions.
+ *         Plots depicting infection based on conditions
+ *         Real time graph of infection rate
+ *         Real time population movement and infection spread.
+ *         Timely display of population in various health conditions.
  * @author moumita
  */
 public class Dashboard extends javax.swing.JFrame {
 
-    private int populationNum, delay;
     private int width=700, height=400;
     Population[] population,populationSAR;
     Map<String,Boolean> factorMap = new HashMap<>();
     Map<String,JLabel> labelMap = new HashMap<>();
     Map<String,Integer> parametersMap = new HashMap<>();
-    double quarantinePercentage,comorbidPercentage,hospitalCap,vaccinatedPercentage,vaccineEffectiveness,
-            infectionR,infectedQuarantinePercentage;
-    int asymptoticFraction,populationBallHeight,populationBallWidth,timerSet;
     Timer timer,timerCheck;
-    long startTime;
-    double simTime;
-    private int count, quarantinedNum,comorbidityNum,r_naught,timerTriggers,recordRate = 2;
-    private boolean paused = false, maskCheck=false, testingCheck=false, vaccineCheck=false, 
-            quarantineCheck=false, distancingCheck=false, remoteCheck=false, allCheck=false,groupEvent=false;  
-    private String parameters="";
-    private JPanel simPanel;
-     private JPanel simPanel2; //for sars
-    boolean firstRun,restartFlag;
     Graph graph;
     Rectangle groupBox = new Rectangle(100, 100, 100, 100);
-    
     StringBuilder log = new StringBuilder();
-    String separator = "";
+    private JPanel simPanel;
+    private JPanel simPanel2; //for sars
+    double quarantinePercentage,comorbidPercentage,hospitalCap,vaccinatedPercentage,vaccineEffectiveness,
+            infectionR,infectedQuarantinePercentage,simTime;
+    long startTime;
+    private int count, quarantinedNum,comorbidityNum,r_naught,timerTriggers,recordRate = 2,
+            asymptoticFraction,populationBallHeight,populationBallWidth,timerSet,populationNum, delay;
+    private boolean paused = false, maskCheck=false, testingCheck=false, vaccineCheck=false, 
+            quarantineCheck=false, distancingCheck=false, remoteCheck=false, allCheck=false,groupEvent=false;  
+    private String parameters="",separator = "";
+    boolean firstRun,restartFlag;
+
     
     /**
      * Creates new form Dashboard
