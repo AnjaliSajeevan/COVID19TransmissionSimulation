@@ -1,5 +1,6 @@
 package Population;
 
+import java.awt.Rectangle;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -81,7 +82,11 @@ public class CountStatusTest {
         conditions.put("infected", true);
         conditions.put("quarantine", true);
         conditions.put("vaccinated", true);
-        //instance = new Population(100, 100, conditions, 500);
+//        instance = new Population(100, 100, conditions, 500, 
+//                groupEvent:false, rectangle: null, populatioNum: 1000, compareVirus: false, rNaught: 0);
+                
+        instance = new Population(100, 100, conditions, 500, 
+                false, null, 1000, false, 0);
     }
 
     @After

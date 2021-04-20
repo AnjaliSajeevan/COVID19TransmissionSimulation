@@ -7,8 +7,6 @@ package UI;
 
 import org.junit.*;
 
-import static org.junit.Assert.*;
-
 /**
  *
  * @author moumita
@@ -34,9 +32,9 @@ public class DashboardTest {
      */
     @Test
     public void testInitializeSimulation() {
-        // Arrange - ToDo.
+        // Arrange
         System.out.println("initializeSimulation");
-
+        
         instance.initializeSimulation();
     }
 
@@ -45,9 +43,9 @@ public class DashboardTest {
      */
     @Test
     public void testGetSimulation() {
-        // Arrange - ToDo.
+        // Arrange
         System.out.println("getSimulation");
-        Dashboard.main(null);
+        //Dashboard.main(null);
         instance.initializeSimulation();
 
         instance.getSimulation();
@@ -70,6 +68,5 @@ public class DashboardTest {
         } catch (Exception exception){
             Assert.fail();
         }
-    }
-    
+    }    
 }
