@@ -56,34 +56,34 @@ public class Dashboard extends javax.swing.JFrame {
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         firstRun=true;
-        restartFlag=false;   
+        restartFlag=false; 
+        
+        buttonPlot.setEnabled(false);
         
         labelHealthy.setText(String.valueOf(populationSlider.getValue()));
         labelSarHealthy.setText(String.valueOf(populationSlider.getValue()));
         try{
-        Ini configuration = new Ini(new File("config.ini"));
-        quarantinePercentage = Double.parseDouble(configuration.get("otherConditions","quarantinePercentage"));
-        comorbidPercentage = Double.parseDouble(configuration.get("infectionParameters","comorbidPercentage"));
-        hospitalCap = Double.parseDouble(configuration.get("otherConditions","hospitalCapacity"));
-        vaccinatedPercentage = Double.parseDouble(configuration.get("vaccineParameters","vaccinatedPercentage"));
-        vaccineEffectiveness = Double.parseDouble(configuration.get("vaccineParameters","vaccineEffectiveness"));
-        infectionR = Double.parseDouble(configuration.get("infectionParameters","infectionRate"));
-        asymptoticFraction = Integer.parseInt(configuration.get("infectionParameters","asymptoticFraction"));
-        infectedQuarantinePercentage = Double.parseDouble(configuration.get("infectionParameters","infectedQuarantinePercentage"));
-        populationBallHeight = Integer.parseInt(configuration.get("ballParameters","populationBallHeight"));
-        populationBallWidth = Integer.parseInt(configuration.get("ballParameters","populationBallWidth"));
+            Ini configuration = new Ini(new File("config.ini"));
+            quarantinePercentage = Double.parseDouble(configuration.get("otherConditions","quarantinePercentage"));
+            comorbidPercentage = Double.parseDouble(configuration.get("infectionParameters","comorbidPercentage"));
+            hospitalCap = Double.parseDouble(configuration.get("otherConditions","hospitalCapacity"));
+            vaccinatedPercentage = Double.parseDouble(configuration.get("vaccineParameters","vaccinatedPercentage"));
+            vaccineEffectiveness = Double.parseDouble(configuration.get("vaccineParameters","vaccineEffectiveness"));
+            infectionR = Double.parseDouble(configuration.get("infectionParameters","infectionRate"));
+            asymptoticFraction = Integer.parseInt(configuration.get("infectionParameters","asymptoticFraction"));
+            infectedQuarantinePercentage = Double.parseDouble(configuration.get("infectionParameters","infectedQuarantinePercentage"));
+            populationBallHeight = Integer.parseInt(configuration.get("ballParameters","populationBallHeight"));
+            populationBallWidth = Integer.parseInt(configuration.get("ballParameters","populationBallWidth"));
         }catch(Exception e){
-            System.out.println("Error reading ini file!");
+            System.out.println("Error reading/parsing ini file! " + e.getMessage());
         }
 
     }
 
 public void initializeSimulation(){
-  //  int quarantinePercentage = configuration.get("parameters","quarantinePercentage");
 
-//Fetch the user defined parameters    
+        //Fetch the user defined parameters
         populationNum = populationSlider.getValue();
-    //       populationNum =5;
 
         if(checkSelectAll.isSelected()){
             maskCheck=true;
@@ -110,7 +110,7 @@ public void initializeSimulation(){
             r_naught = 0;
         }
 
-//Add all factors to factorMap and JLabel to labelMap to be accessed in Panel class.        
+        //Add all factors to factorMap and JLabel to labelMap to be accessed in Panel class.
         factorMap.put("maskCheck", maskCheck);  
         factorMap.put("vaccineCheck", vaccineCheck);
         factorMap.put("testingCheck", testingCheck);
@@ -136,17 +136,17 @@ public void initializeSimulation(){
         parametersMap.put("asymptoticFraction", asymptoticFraction);
 
         
-//Update Parameters in the Result Pane        
+        //Update Parameters in the Result Pane
         parameters = "Population:"+populationNum;
         parameters+="\n Usage of Masks:"+maskCheck;
         parameters+="\n Vaccinated:"+vaccineCheck;
         parameters+="\n Following Social Distancing:"+distancingCheck;
         parameters+="\n Quarantined:"+quarantineCheck;
-        parameters+="\n Following Handwash:"+remoteCheck;
+        parameters+="\n Is Remote:"+remoteCheck;
         parameters+="\n Practicing Testing and Contact Tracing :"+testingCheck;
-        parameterLabel.setText(parameters);
+        //parameterLabel.setText(parameters);
 
-//Initialize population       
+        //Initialize population
         timerTriggers = 0;
         count = 0;
         population = new Population[populationNum];
@@ -156,9 +156,12 @@ public void initializeSimulation(){
             panelSarsSim.remove(simPanel2);
             restartFlag=false;
         }
-            graph=new Graph();
-         simPanel = new PopulationPaintPanel(population,labelMap, factorMap,groupEvent,groupBox,parametersMap,infectedQuarantinePercentage,graph);
-         simPanel2 = new PopulationPaintPanel(populationSAR,labelMap, factorMap,groupEvent,groupBox,parametersMap,infectedQuarantinePercentage,graph);
+
+        graph=new Graph();
+        simPanel = new PopulationPaintPanel(population,labelMap, factorMap,groupEvent,
+                groupBox,parametersMap,infectedQuarantinePercentage,graph);
+        simPanel2 = new PopulationPaintPanel(populationSAR,labelMap, factorMap,groupEvent,
+                groupBox,parametersMap,infectedQuarantinePercentage,graph);
 
     
         panelSarsCovSim.setLayout(new BorderLayout());
@@ -167,21 +170,18 @@ public void initializeSimulation(){
         panelSarsSim.add(simPanel2);
         panelSarsSim.revalidate();
         panelSarsCovSim.revalidate();
-       
-        
-       
         
 
-//Assign type of population  
-/*
-Population Parameters:
-1. X position in panel
-2. Y position in Panel
-3. infected condition
-4. quarantined condition
-5. Comorbidity condition
-6. compareVirus (true = Sars Virus ; false = Covid Virus)
-*/
+        //Assign type of population
+        /*
+            Population Parameters:
+            1. X position in panel
+            2. Y position in Panel
+            3. infected condition
+            4. quarantined condition
+            5. Comorbidity condition
+            6. compareVirus (true = Sars Virus ; false = Covid Virus)
+        */
         quarantinedNum = (int)(quarantinePercentage * populationNum);
         comorbidityNum = (int) (comorbidPercentage  * populationNum);
         int hospitalCapacity = (int)(hospitalCap * populationNum);
@@ -213,33 +213,34 @@ Population Parameters:
                quarantined = false; 
             }
             if(testingCheck){
-                  if (i < quarantinedNum) {
+                if (i < quarantinedNum) {
                     quarantined = true;
                 }else{
                     quarantined = false;
                 }                
             }
-                if(i<comorbidityNum){
-                        comorbidity = true;
-                    }else{
-                        comorbidity = false;
-                    } 
-                if(vaccineCheck){
-                
-                    if(i < vaccinatedCount){
-                        if(!infected){
+
+            if(i<comorbidityNum){
+                comorbidity = true;
+            }else{
+                comorbidity = false;
+            }
+
+            if(vaccineCheck){
+                if(i < vaccinatedCount){
+                    if(!infected){
                         vaccinated = true;
-                        }
-                        if(vaccineEffective>0){
-                            prone=false;
-                            vaccineEffective--;
-                        }else{
-                            prone=true;
-                        }
-                    }else{
-                        vaccinated = false;
                     }
-                }    
+                    if(vaccineEffective>0){
+                        prone=false;
+                        vaccineEffective--;
+                    }else{
+                        prone=true;
+                    }
+                }else{
+                    vaccinated = false;
+                }
+            }
 
             conditionMap.put("quarantine",quarantined);
             conditionMap.put("distancingCheck",distancingCheck);
@@ -248,19 +249,22 @@ Population Parameters:
             conditionMap.put("comorbidity",comorbidity);
             conditionMap.put("compareVirus", compareVirus);
             conditionMap.put("infected", infected);
-       
-           
-    population[i] = new Population((int) (Math.random() * (width - 10)), (int) (Math.random() * (height - 10)),conditionMap,hospitalCapacity,groupEvent,groupBox,populationNum,false,r_naught);           
-    populationSAR[i] = new Population((int) (Math.random() * (width - 10)), (int) (Math.random() * (height - 10)),conditionMap,hospitalCapacity,groupEvent,groupBox,populationNum,true,r_naught);           
-    try{
-        timerSet = Integer.parseInt(timerArea.getText());
-    }catch(Exception e){
-        timerSet = 0;
-    }
+
+            population[i] = new Population((int) (Math.random() * (width - 10)), (int) (Math.random() * (height - 10)),
+                    conditionMap,hospitalCapacity,groupEvent,groupBox,
+                    populationNum,false,r_naught);
+            populationSAR[i] = new Population((int) (Math.random() * (width - 10)), (int) (Math.random() * (height - 10)),
+                conditionMap,hospitalCapacity,groupEvent,groupBox,
+                populationNum,true,r_naught);
+            try{
+                timerSet = Integer.parseInt(timerArea.getText());
+            }catch(Exception e){
+                timerSet = 0;
+            }
         }
 
 
-//Set the timer and update the status of population 
+        //Set the timer and update the status of population
         timer = new Timer(delay,new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -279,10 +283,11 @@ Population Parameters:
 
 
     public void getSimulation(){
-//Restart Timer        
-        timer.restart();
+        //Restart Timer
+        if(timer != null) // Unit tests fail for null timer.
+            timer.restart();
         
-//Update the health status population
+        //Update the health status population
         for (int i = 0; i < population.length; i++) {
             population[i].countStatus();
             if (population[i].isInfected() && i < populationNum) {
@@ -299,17 +304,17 @@ Population Parameters:
                 populationSAR[i].kill();
             }
         }
-//Repaint the population
+
+        //Repaint the population
         repaint();
         timerTriggers++;
         if (timerTriggers % recordRate == 0) {
             count++;
         }
-        
     }
 
     public void checkTimer(){
-             timerCheck = new Timer(0,new ActionListener(){
+        timerCheck = new Timer(0,new ActionListener(){
       
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -339,7 +344,8 @@ Population Parameters:
             }
         });
         timerCheck.start();
-    }    
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -374,18 +380,7 @@ Population Parameters:
         RNaughtValue = new javax.swing.JTextField();
         jLabel42 = new javax.swing.JLabel();
         timerArea = new javax.swing.JTextField();
-        jSplitPane2 = new javax.swing.JSplitPane();
-        jPanel14 = new javax.swing.JPanel();
-        jPanel15 = new javax.swing.JPanel();
-        jPanel17 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        panelSarsCovSim = new javax.swing.JPanel();
-        jLabel18 = new javax.swing.JLabel();
-        jPanel16 = new javax.swing.JPanel();
-        jPanel18 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
-        panelSarsSim = new javax.swing.JPanel();
-        jLabel22 = new javax.swing.JLabel();
+        buttonPlot = new javax.swing.JButton();
         jPanel11 = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
@@ -414,10 +409,22 @@ Population Parameters:
         jPanel13 = new javax.swing.JPanel();
         jPanel19 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        parameterLabel = new javax.swing.JLabel();
         populationLabel = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
         jLabel41 = new javax.swing.JLabel();
+        panelMain = new javax.swing.JPanel();
+        jSplitPane2 = new javax.swing.JSplitPane();
+        jPanel14 = new javax.swing.JPanel();
+        jPanel15 = new javax.swing.JPanel();
+        jPanel17 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        panelSarsCovSim = new javax.swing.JPanel();
+        jLabel18 = new javax.swing.JLabel();
+        jPanel16 = new javax.swing.JPanel();
+        jPanel18 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        panelSarsSim = new javax.swing.JPanel();
+        jLabel22 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -688,51 +695,57 @@ Population Parameters:
             }
         });
 
+        buttonPlot.setBackground(new java.awt.Color(255, 255, 255));
+        buttonPlot.setForeground(new java.awt.Color(0, 0, 139));
+        buttonPlot.setText("PLOT");
+        buttonPlot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPlotActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(buttonStart, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(buttonStop, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(buttonPause, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(buttonResume, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(populationSlider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(16, 16, 16)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(checkTestingAndTracing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(checkVaccine, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(checkQuarantine, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(checkSocialDistancing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(checkSocialDistancing, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
                             .addComponent(checkRemote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(checkGroupEvent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(checkSelectAll, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(RNaughtValue, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel39, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(23, 23, 23)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(timerArea, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel42, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(jPanel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(111, 111, 111)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(buttonPlot, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel42, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(timerArea))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel39, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(RNaughtValue, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                    .addComponent(buttonStart, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(buttonStop, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(buttonPause, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(buttonResume, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap())
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(populationSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -752,17 +765,17 @@ Population Parameters:
                 .addComponent(checkRemote)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(checkGroupEvent)
-                .addGap(29, 29, 29)
+                .addGap(31, 31, 31)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel39)
-                    .addComponent(RNaughtValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel42))
+                .addGap(2, 2, 2)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel42)
+                    .addComponent(RNaughtValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(timerArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(11, 11, 11)
+                .addGap(47, 47, 47)
                 .addComponent(jLabel13)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(populationSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -774,149 +787,10 @@ Population Parameters:
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(buttonStop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buttonResume))
-                .addGap(34, 34, 34))
+                .addGap(18, 18, 18)
+                .addComponent(buttonPlot, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
         );
-
-        jSplitPane2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 139)));
-        jSplitPane2.setDividerLocation(700);
-        jSplitPane2.setDividerSize(4);
-
-        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
-        jPanel14.setLayout(jPanel14Layout);
-        jPanel14Layout.setHorizontalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel14Layout.setVerticalGroup(
-            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        jSplitPane2.setLeftComponent(jPanel14);
-
-        jPanel15.setBackground(new java.awt.Color(255, 255, 255));
-
-        jPanel17.setBackground(new java.awt.Color(223, 240, 254));
-        jPanel17.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 139));
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("SARS-CoV-2");
-
-        javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
-        jPanel17.setLayout(jPanel17Layout);
-        jPanel17Layout.setHorizontalGroup(
-            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 649, Short.MAX_VALUE)
-        );
-        jPanel17Layout.setVerticalGroup(
-            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel17Layout.createSequentialGroup()
-                .addGap(0, 13, Short.MAX_VALUE)
-                .addComponent(jLabel7))
-        );
-
-        panelSarsCovSim.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jLabel18.setText("Number of infected people over time");
-
-        javax.swing.GroupLayout panelSarsCovSimLayout = new javax.swing.GroupLayout(panelSarsCovSim);
-        panelSarsCovSim.setLayout(panelSarsCovSimLayout);
-        panelSarsCovSimLayout.setHorizontalGroup(
-            panelSarsCovSimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelSarsCovSimLayout.createSequentialGroup()
-                .addGap(147, 147, 147)
-                .addComponent(jLabel18)
-                .addContainerGap(253, Short.MAX_VALUE))
-        );
-        panelSarsCovSimLayout.setVerticalGroup(
-            panelSarsCovSimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSarsCovSimLayout.createSequentialGroup()
-                .addContainerGap(379, Short.MAX_VALUE)
-                .addComponent(jLabel18)
-                .addGap(281, 281, 281))
-        );
-
-        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
-        jPanel15.setLayout(jPanel15Layout);
-        jPanel15Layout.setHorizontalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelSarsCovSim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel15Layout.setVerticalGroup(
-            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel15Layout.createSequentialGroup()
-                .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelSarsCovSim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jSplitPane2.setLeftComponent(jPanel15);
-
-        jPanel16.setBackground(new java.awt.Color(255, 255, 255));
-
-        jPanel18.setBackground(new java.awt.Color(223, 240, 254));
-        jPanel18.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 139));
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("SARS");
-
-        javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
-        jPanel18.setLayout(jPanel18Layout);
-        jPanel18Layout.setHorizontalGroup(
-            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
-        );
-        jPanel18Layout.setVerticalGroup(
-            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel18Layout.createSequentialGroup()
-                .addGap(0, 13, Short.MAX_VALUE)
-                .addComponent(jLabel8))
-        );
-
-        panelSarsSim.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel22.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jLabel22.setText("Number of infected people over time");
-
-        javax.swing.GroupLayout panelSarsSimLayout = new javax.swing.GroupLayout(panelSarsSim);
-        panelSarsSim.setLayout(panelSarsSimLayout);
-        panelSarsSimLayout.setHorizontalGroup(
-            panelSarsSimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSarsSimLayout.createSequentialGroup()
-                .addContainerGap(254, Short.MAX_VALUE)
-                .addComponent(jLabel22)
-                .addGap(155, 155, 155))
-        );
-        panelSarsSimLayout.setVerticalGroup(
-            panelSarsSimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSarsSimLayout.createSequentialGroup()
-                .addContainerGap(380, Short.MAX_VALUE)
-                .addComponent(jLabel22)
-                .addGap(279, 279, 279))
-        );
-
-        javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
-        jPanel16.setLayout(jPanel16Layout);
-        jPanel16Layout.setHorizontalGroup(
-            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelSarsSim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel16Layout.setVerticalGroup(
-            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel16Layout.createSequentialGroup()
-                .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelSarsSim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jSplitPane2.setRightComponent(jPanel16);
 
         jPanel11.setBackground(new java.awt.Color(255, 255, 255));
         jPanel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 139)));
@@ -1121,7 +995,8 @@ Population Parameters:
                     .addComponent(jLabel53, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel54, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel55, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel11Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel11Layout.createSequentialGroup()
                                 .addComponent(jLabel36)
@@ -1147,17 +1022,17 @@ Population Parameters:
                                 .addComponent(jLabel14)
                                 .addGap(18, 18, 18)
                                 .addComponent(jPanel22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(10, 10, 10)))
                 .addContainerGap())
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50)
+                .addGap(51, 51, 51)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE))
+                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel57, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1178,9 +1053,9 @@ Population Parameters:
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel61, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel36, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(125, 125, 125)
+                .addGap(124, 124, 124)
                 .addComponent(jPanel62, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(34, 34, 34)
                 .addComponent(jLabel38, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel47, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1192,7 +1067,7 @@ Population Parameters:
                 .addComponent(jLabel52, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel53, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(61, 61, 61)
+                .addGap(45, 45, 45)
                 .addComponent(jLabel54, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel55, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1206,7 +1081,7 @@ Population Parameters:
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(0, 0, 139));
-        jLabel12.setText("RESULTS");
+        jLabel12.setText("LOGS");
 
         javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
         jPanel19.setLayout(jPanel19Layout);
@@ -1224,6 +1099,9 @@ Population Parameters:
                 .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        populationLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        populationLabel.setForeground(new java.awt.Color(0, 0, 139));
+
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
         jPanel13Layout.setHorizontalGroup(
@@ -1231,27 +1109,185 @@ Population Parameters:
             .addComponent(jPanel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel13Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(parameterLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(populationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 1089, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(populationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel13Layout.createSequentialGroup()
                 .addComponent(jPanel19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addComponent(parameterLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(populationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 54, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(populationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jLabel40.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel40.setText("time ->");
+        jLabel40.setForeground(new java.awt.Color(0, 0, 139));
+        jLabel40.setText("Time ->");
 
         jLabel41.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel41.setText("time ->");
+        jLabel41.setForeground(new java.awt.Color(0, 0, 139));
+        jLabel41.setText("Time ->");
+
+        jSplitPane2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 139)));
+        jSplitPane2.setDividerLocation(700);
+        jSplitPane2.setDividerSize(4);
+
+        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+        jPanel14.setLayout(jPanel14Layout);
+        jPanel14Layout.setHorizontalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel14Layout.setVerticalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jSplitPane2.setLeftComponent(jPanel14);
+
+        jPanel15.setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel17.setBackground(new java.awt.Color(223, 240, 254));
+        jPanel17.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(0, 0, 139));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("SARS-CoV-2");
+
+        javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
+        jPanel17.setLayout(jPanel17Layout);
+        jPanel17Layout.setHorizontalGroup(
+            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
+        );
+        jPanel17Layout.setVerticalGroup(
+            jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel17Layout.createSequentialGroup()
+                .addGap(0, 13, Short.MAX_VALUE)
+                .addComponent(jLabel7))
+        );
+
+        panelSarsCovSim.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(0, 0, 139));
+        jLabel18.setText("Number of infected people over time");
+
+        javax.swing.GroupLayout panelSarsCovSimLayout = new javax.swing.GroupLayout(panelSarsCovSim);
+        panelSarsCovSim.setLayout(panelSarsCovSimLayout);
+        panelSarsCovSimLayout.setHorizontalGroup(
+            panelSarsCovSimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSarsCovSimLayout.createSequentialGroup()
+                .addGap(195, 195, 195)
+                .addComponent(jLabel18)
+                .addContainerGap(205, Short.MAX_VALUE))
+        );
+        panelSarsCovSimLayout.setVerticalGroup(
+            panelSarsCovSimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSarsCovSimLayout.createSequentialGroup()
+                .addContainerGap(377, Short.MAX_VALUE)
+                .addComponent(jLabel18)
+                .addGap(251, 251, 251))
+        );
+
+        javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
+        jPanel15.setLayout(jPanel15Layout);
+        jPanel15Layout.setHorizontalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelSarsCovSim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel15Layout.setVerticalGroup(
+            jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel15Layout.createSequentialGroup()
+                .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelSarsCovSim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jSplitPane2.setLeftComponent(jPanel15);
+
+        jPanel16.setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel18.setBackground(new java.awt.Color(223, 240, 254));
+        jPanel18.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(0, 0, 139));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("SARS");
+
+        javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
+        jPanel18.setLayout(jPanel18Layout);
+        jPanel18Layout.setHorizontalGroup(
+            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
+        );
+        jPanel18Layout.setVerticalGroup(
+            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel18Layout.createSequentialGroup()
+                .addGap(0, 13, Short.MAX_VALUE)
+                .addComponent(jLabel8))
+        );
+
+        panelSarsSim.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel22.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jLabel22.setForeground(new java.awt.Color(0, 0, 139));
+        jLabel22.setText("Number of infected people over time");
+
+        javax.swing.GroupLayout panelSarsSimLayout = new javax.swing.GroupLayout(panelSarsSim);
+        panelSarsSim.setLayout(panelSarsSimLayout);
+        panelSarsSimLayout.setHorizontalGroup(
+            panelSarsSimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSarsSimLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel22)
+                .addGap(166, 166, 166))
+        );
+        panelSarsSimLayout.setVerticalGroup(
+            panelSarsSimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSarsSimLayout.createSequentialGroup()
+                .addContainerGap(379, Short.MAX_VALUE)
+                .addComponent(jLabel22)
+                .addGap(249, 249, 249))
+        );
+
+        javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
+        jPanel16.setLayout(jPanel16Layout);
+        jPanel16Layout.setHorizontalGroup(
+            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelSarsSim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel16Layout.setVerticalGroup(
+            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelSarsSim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jSplitPane2.setRightComponent(jPanel16);
+
+        javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
+        panelMain.setLayout(panelMainLayout);
+        panelMainLayout.setHorizontalGroup(
+            panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelMainLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSplitPane2)
+                .addContainerGap())
+        );
+        panelMainLayout.setVerticalGroup(
+            panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelMainLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSplitPane2)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1264,7 +1300,7 @@ Population Parameters:
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jSplitPane2)
+                        .addComponent(panelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -1279,11 +1315,15 @@ Population Parameters:
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jSplitPane2)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(1, 1, 1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(1, 1, 1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(panelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel40)
                     .addComponent(jLabel41))
@@ -1444,7 +1484,7 @@ Population Parameters:
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addComponent(jSplitPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -1933,7 +1973,7 @@ Population Parameters:
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel4)
-                .addGap(18, 20, Short.MAX_VALUE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jSplitPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel6Layout.setVerticalGroup(
@@ -2096,7 +2136,7 @@ Population Parameters:
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(46, 46, 46)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
                 .addComponent(jSplitPane9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel7Layout.setVerticalGroup(
@@ -2144,7 +2184,7 @@ Population Parameters:
                 .addGap(18, 18, 18)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
@@ -2222,6 +2262,8 @@ Population Parameters:
         buttonPause.setEnabled(true);
         buttonResume.setEnabled(false);
         buttonStop.setEnabled(true);
+        buttonPlot.setEnabled(true);
+        
         populationSlider.setEnabled(false);     
         if(firstRun){
              initializeSimulation();
@@ -2242,7 +2284,6 @@ Population Parameters:
     }//GEN-LAST:event_buttonStartActionPerformed
 
     private void buttonPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPauseActionPerformed
-        // TODO add your handling code here:
         timer.stop();
         paused = true;
         buttonStart.setEnabled(false);
@@ -2253,7 +2294,6 @@ Population Parameters:
     }//GEN-LAST:event_buttonPauseActionPerformed
 
     private void buttonResumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonResumeActionPerformed
-        // TODO add your handling code here:
         timer.restart();
         paused=false;
         buttonResume.setEnabled(false);
@@ -2263,7 +2303,6 @@ Population Parameters:
     }//GEN-LAST:event_buttonResumeActionPerformed
 
     private void buttonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStopActionPerformed
-        // TODO add your handling code here:
         timer.stop();
         
         restartFlag= true;
@@ -2282,13 +2321,31 @@ Population Parameters:
         
         populationSlider.setEnabled(true);
         
-       graph.printGraph();
+        graph.printGraph();
+
+        // print results.
+        printResults();
         
     }//GEN-LAST:event_buttonStopActionPerformed
 
+    private void printResults() {
+        StringBuilder stringBuilder = new StringBuilder();
+        Map<Integer, Map<String, Integer>> map = ((PopulationPaintPanel)simPanel).getResultMap();
+        map.forEach((t, m) -> {
+            stringBuilder.append("Day: ").append(t/45)
+                .append(" Healthy: ").append(m.get("Healthy"))
+                .append(" Infected: ").append(m.get("Infected"))
+                .append(" Asymptotic: ").append(m.get("Asymptotic"))
+                .append(" Hospitalized: ").append(m.get("Hospitalized"))
+                .append(" Recovered: ").append(m.get("Recovered"))
+                .append(" Dead: ").append(m.get("Dead")).append("\n");
+        });
+
+        populationLabel.setText("<html>" + stringBuilder.toString().replaceAll("\n", "<br>"));
+    }
+
     private void checkGroupEventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkGroupEventActionPerformed
-        // TODO add your handling code here:
-           if(!checkGroupEvent.isSelected()){
+        if(!checkGroupEvent.isSelected()){
             groupEvent=false;
         } else {
            groupEvent=true;
@@ -2307,6 +2364,15 @@ Population Parameters:
     private void timerAreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timerAreaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_timerAreaActionPerformed
+
+    private void buttonPlotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPlotActionPerformed
+        // Show plot.
+        if(((PopulationPaintPanel)simPanel).getResultMap() != null){
+            PlotChartJFrame chart = new PlotChartJFrame(((PopulationPaintPanel)simPanel).getResultMap(), 
+                    RNaughtValue.getText());
+            chart.setVisible(true);
+        }
+    }//GEN-LAST:event_buttonPlotActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2346,6 +2412,7 @@ Population Parameters:
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField RNaughtValue;
     private javax.swing.JButton buttonPause;
+    private javax.swing.JButton buttonPlot;
     private javax.swing.JButton buttonResume;
     private javax.swing.JButton buttonStart;
     private javax.swing.JButton buttonStop;
@@ -2480,9 +2547,9 @@ Population Parameters:
     private javax.swing.JLabel labelSARSevere;
     private javax.swing.JLabel labelSarHealthy;
     private javax.swing.JLabel labelSevere;
+    private javax.swing.JPanel panelMain;
     private javax.swing.JPanel panelSarsCovSim;
     private javax.swing.JPanel panelSarsSim;
-    private javax.swing.JLabel parameterLabel;
     private javax.swing.JLabel populationLabel;
     private javax.swing.JSlider populationSlider;
     private javax.swing.JTextField timerArea;
