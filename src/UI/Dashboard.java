@@ -2269,6 +2269,9 @@ public void initializeSimulation(){
         buttonStop.setEnabled(true);
         buttonPlot.setEnabled(true);
         
+        RNaughtValue.setEnabled(false);
+        timerArea.setEnabled(false);
+        
         populationSlider.setEnabled(false);     
         if(firstRun){
              initializeSimulation();
@@ -2296,6 +2299,8 @@ public void initializeSimulation(){
         buttonPause.setEnabled(false);
         
         populationSlider.setEnabled(true);
+        RNaughtValue.setEnabled(true);
+        timerArea.setEnabled(true);
     }//GEN-LAST:event_buttonPauseActionPerformed
 
     private void buttonResumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonResumeActionPerformed
@@ -2305,6 +2310,8 @@ public void initializeSimulation(){
         buttonPause.setEnabled(true);
         
         populationSlider.setEnabled(false);
+        RNaughtValue.setEnabled(false);
+        timerArea.setEnabled(false);
     }//GEN-LAST:event_buttonResumeActionPerformed
 
     private void buttonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStopActionPerformed
@@ -2325,6 +2332,8 @@ public void initializeSimulation(){
         checkSelectAll.setEnabled(true);
         
         populationSlider.setEnabled(true);
+        RNaughtValue.setEnabled(true);
+        timerArea.setEnabled(true);
         
         graph.printGraph();
 
