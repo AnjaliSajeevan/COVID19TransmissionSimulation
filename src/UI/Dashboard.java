@@ -16,6 +16,7 @@ import java.io.File;
 import org.ini4j.Ini;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -48,6 +49,9 @@ public class Dashboard extends javax.swing.JFrame {
     boolean firstRun,restartFlag;
     Graph graph;
     Rectangle groupBox = new Rectangle(100, 100, 100, 100);
+    
+    StringBuilder log = new StringBuilder();
+    
     /**
      * Creates new form Dashboard
      */
@@ -118,7 +122,7 @@ public void initializeSimulation(){
         factorMap.put("remoteCheck", remoteCheck);
         factorMap.put("distancingCheck", distancingCheck);
  
-        labelMap.put("population", populationLabel);
+        //labelMap.put("population", populationLabel);
         labelMap.put("healthy", labelHealthy);
         labelMap.put("infected", labelInfected);
         labelMap.put("severe", labelSevere);
@@ -409,7 +413,8 @@ public void initializeSimulation(){
         jPanel13 = new javax.swing.JPanel();
         jPanel19 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        populationLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        populationLabel = new javax.swing.JTextArea();
         jLabel40 = new javax.swing.JLabel();
         jLabel41 = new javax.swing.JLabel();
         panelMain = new javax.swing.JPanel();
@@ -1099,26 +1104,31 @@ public void initializeSimulation(){
                 .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
+
+        populationLabel.setEditable(false);
+        populationLabel.setColumns(20);
         populationLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         populationLabel.setForeground(new java.awt.Color(0, 0, 139));
+        populationLabel.setRows(5);
+        populationLabel.setDisabledTextColor(new java.awt.Color(0, 0, 139));
+        populationLabel.setFocusable(false);
+        populationLabel.setOpaque(false);
+        jScrollPane1.setViewportView(populationLabel);
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
         jPanel13Layout.setHorizontalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel13Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(populationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane1)
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel13Layout.createSequentialGroup()
                 .addComponent(jPanel19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(populationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
         );
 
         jLabel40.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -1187,7 +1197,7 @@ public void initializeSimulation(){
         panelSarsCovSimLayout.setVerticalGroup(
             panelSarsCovSimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSarsCovSimLayout.createSequentialGroup()
-                .addContainerGap(377, Short.MAX_VALUE)
+                .addContainerGap(403, Short.MAX_VALUE)
                 .addComponent(jLabel18)
                 .addGap(251, 251, 251))
         );
@@ -1223,7 +1233,7 @@ public void initializeSimulation(){
         jPanel18.setLayout(jPanel18Layout);
         jPanel18Layout.setHorizontalGroup(
             jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
+            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)
         );
         jPanel18Layout.setVerticalGroup(
             jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1250,7 +1260,7 @@ public void initializeSimulation(){
         panelSarsSimLayout.setVerticalGroup(
             panelSarsSimLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSarsSimLayout.createSequentialGroup()
-                .addContainerGap(379, Short.MAX_VALUE)
+                .addContainerGap(405, Short.MAX_VALUE)
                 .addComponent(jLabel22)
                 .addGap(249, 249, 249))
         );
@@ -1276,17 +1286,11 @@ public void initializeSimulation(){
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
             panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMainLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jSplitPane2)
-                .addContainerGap())
+            .addComponent(jSplitPane2)
         );
         panelMainLayout.setVerticalGroup(
             panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMainLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jSplitPane2)
-                .addContainerGap())
+            .addComponent(jSplitPane2)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -2331,17 +2335,29 @@ public void initializeSimulation(){
     private void printResults() {
         StringBuilder stringBuilder = new StringBuilder();
         Map<Integer, Map<String, Integer>> map = ((PopulationPaintPanel)simPanel).getResultMap();
+        final int[] countForNewLine = {0};
         map.forEach((t, m) -> {
+            countForNewLine[0]++;
             stringBuilder.append("Day: ").append(t/45)
                 .append(" Healthy: ").append(m.get("Healthy"))
                 .append(" Infected: ").append(m.get("Infected"))
-                .append(" Asymptotic: ").append(m.get("Asymptotic"))
+                .append(" Asymptomatic: ").append(m.get("Asymptomatic"))
                 .append(" Hospitalized: ").append(m.get("Hospitalized"))
                 .append(" Recovered: ").append(m.get("Recovered"))
-                .append(" Dead: ").append(m.get("Dead")).append("\n");
+                .append(" Dead: ").append(m.get("Dead"))
+                .append(" | ");
+
+            //if(countForNewLine[0] % 2 == 0)
+                //stringBuilder.append("\n");
         });
 
-        populationLabel.setText("<html>" + stringBuilder.toString().replaceAll("\n", "<br>"));
+        log.append("\nStart Simulation----------------------------------------------------------------------------------------------------------------------------------------------------")
+                .append("\n");
+        log.append(stringBuilder.substring(stringBuilder.lastIndexOf("Day: ")));
+        log.append("\nEnd Simulation------------------------------------------------------------------------------------------------------------------------------------------------------")
+                .append("\n");
+        populationLabel.setLineWrap(true);
+        populationLabel.setText(log.toString());
     }
 
     private void checkGroupEventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkGroupEventActionPerformed
@@ -2530,6 +2546,7 @@ public void initializeSimulation(){
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JSplitPane jSplitPane3;
@@ -2550,7 +2567,7 @@ public void initializeSimulation(){
     private javax.swing.JPanel panelMain;
     private javax.swing.JPanel panelSarsCovSim;
     private javax.swing.JPanel panelSarsSim;
-    private javax.swing.JLabel populationLabel;
+    private javax.swing.JTextArea populationLabel;
     private javax.swing.JSlider populationSlider;
     private javax.swing.JTextField timerArea;
     // End of variables declaration//GEN-END:variables
