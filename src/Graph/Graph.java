@@ -30,14 +30,12 @@ public class Graph {
         Vertex a2=null;
         a1=getVertex(v1);
         a2=getVertex(v2);
-
         result = a1.getEdges().add(new Edge(a2));
-
         return result;
     }
     
     public boolean checkVertex(String x) {
-
+        
         boolean result = false;
         for (Vertex s : nodes) {
 
@@ -61,7 +59,7 @@ public class Graph {
     }
 
     public void printGraph(){
-        System.out.println("--------------Contact Tracing-------------------------");
+        System.out.println("---------------------Contact Tracing------------------------------");
         for(Vertex v : nodes){
             System.out.print("Person: "+ v.getName() + " -> ");
             for(Edge e : v.getEdges()){
