@@ -61,23 +61,4 @@ public class DashboardTest {
             Assert.fail();
         }
     }
-
-    /**
-     * Test of main method, of class Dashboard.
-     * The main function shouldn't throw any exception.
-     */
-    @Test
-    public void testMain() {
-        // Arrange
-        System.out.println("main");
-        String[] args = null;
-
-        // Act & Assert
-        // [No Assert.DoesNotThrow(() => MyMethod()); in JUnit4. :( ]
-        try {
-            instance.main(args);
-        } catch (Exception exception){
-            Assert.fail();
-        }
-    }
 }
