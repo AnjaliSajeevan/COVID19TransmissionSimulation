@@ -2340,7 +2340,7 @@ public void initializeSimulation(){
         final int[] countForNewLine = {0};
         map.forEach((t, m) -> {
             countForNewLine[0]++;
-            stringBuilder.append("Days: ").append(t/45).append(" | ")
+            stringBuilder.append("Days: ").append(t/90).append(" | ")
                 .append(" Healthy: ").append(m.get("Healthy"))
                 .append(" Infected: ").append(m.get("Infected"))
                 .append(" Asymptomatic: ").append(m.get("Asymptomatic"))
