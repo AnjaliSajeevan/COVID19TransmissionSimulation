@@ -151,7 +151,7 @@ public class PopulationPaintPanel extends JPanel{
         map.put("Hospitalized", hospitalized);
         map.put("Recovered", recovered);
         map.put("Dead", dead);
-        map.put("Asymptotic", asymptoticPeople);
+        map.put("Asymptomatic", asymptoticPeople);
 
         if(time % 90 == 0) // 15 is divisible by 90.
             resultMap.put(time, map);

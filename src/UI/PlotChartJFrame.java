@@ -65,16 +65,16 @@ public class PlotChartJFrame extends JFrame {
         XYSeries recovered = new XYSeries("Recovered");
         XYSeries hospitalized = new XYSeries("Hospitalized");
         XYSeries dead = new XYSeries("Dead");
-        XYSeries asymptotic = new XYSeries("Asymptotic");
+        //XYSeries asymptotic = new XYSeries("Asymptomatic");
 
         resultsMap.forEach((t,m) -> {
-            t /= 90;
-            healthy.add(t, m.get("Healthy"));
+            t /= 90; // Factor the milliseconds to days.
             infected.add(t, m.get("Infected"));
+            healthy.add(t, m.get("Healthy"));
             recovered.add(t, m.get("Recovered"));
-            hospitalized.add(t, m.get("Recovered"));
-            dead.add(t, m.get("Recovered"));
-            asymptotic.add(t, m.get("Recovered"));
+            hospitalized.add(t, m.get("Hospitalized"));
+            dead.add(t, m.get("Dead"));
+            //asymptotic.add(t, m.get("Asymptomatic"));
         }); 
  
         data.addSeries(healthy);
@@ -82,7 +82,7 @@ public class PlotChartJFrame extends JFrame {
         data.addSeries(recovered);
         data.addSeries(hospitalized);
         data.addSeries(dead);
-        data.addSeries(asymptotic);
+        //data.addSeries(asymptotic);
  
         return data;
     }
