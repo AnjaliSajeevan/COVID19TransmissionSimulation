@@ -21,16 +21,16 @@ import java.util.Map;
  */
 public class Population {
 
-    Rectangle mainPanel = new Rectangle(0, 0, 700, 400);
-    Rectangle groupBox;
-    Map<String,Integer> map= new HashMap<>();
+    private Rectangle mainPanel = new Rectangle(0, 0, 700, 400);
+    private Rectangle groupBox;
+    private Map<String,Integer> map= new HashMap<>();
     private int status; // 0 for healthy, 1 for infected, 2 for hospitalized , 3 for recovered, 4 for dead, 5 for vaccinated
     private int countInfected, hospitalCapacity,countHospitalized;
     private boolean firstInfected,quarantined,distancing,vaccinated,prone, ignore, comorbidity,compareVirus;
     private double risk,x_f,y_f,x, y, xTemp, yTemp;
     private long infectTime;
     private int populationNum,r_naught,tempCount,infectCount,Collisioncount=0;
-    boolean groupEvent;
+    private boolean groupEvent;
     private String code;
 
 

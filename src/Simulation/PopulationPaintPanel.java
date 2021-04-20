@@ -20,32 +20,24 @@ import javax.swing.JPanel;
 
 
 /**
- *
+ * This program uses 2D Graphics to paint the population components based on their status(health condition)
  * @author Manasa
  */
 public class PopulationPaintPanel extends JPanel{
     
-    Population[] people;
-    int healthy;
-    int infected;
-    int hospitalized;
-    int recovered;
-    int dead;
-    double infectedQuarantinePercentage;
-    int asymptoticPeople,asymptoticFraction;
-    int mark, ballH, ballW;
-    String populationMessage="";
-    JLabel populationLabel, labelHealthy,labelSevere, labelRecovered, labelDead, labelInfected;
-    JLabel labelSARHealthy,labelSARSevere, labelSARRecovered, labelSARDead, labelSARInfected;
-    int infectedQuarantineNum;//infectedQuarantineNum - No of infected people that quarantine when quarantine is checked .
-    boolean quarantineCheck,testingCheck;
-    Rectangle groupBox;boolean groupEvent;
-    int populationNum;
-    Graph graph;
-    ArrayList<GraphPlot> points =new ArrayList<GraphPlot>();
-    int time=0;
+    private Population[] people;
+    private JLabel populationLabel, labelHealthy,labelSevere, labelRecovered, labelDead, labelInfected;
+    private JLabel labelSARHealthy,labelSARSevere, labelSARRecovered, labelSARDead, labelSARInfected;
+    private Rectangle groupBox;
+    private Graph graph;
+    private ArrayList<GraphPlot> points =new ArrayList<GraphPlot>();
+    private Map<Integer, Map<String, Integer>> resultMap;
+    private String populationMessage="";
+    private boolean quarantineCheck,testingCheck,groupEvent;
+    private int healthy, infected, hospitalized,recovered, dead, infectedQuarantineNum,mark, ballH, ballW,
+           asymptoticPeople,asymptoticFraction, time=0;
+    private double infectedQuarantinePercentage;
 
-    Map<Integer, Map<String, Integer>> resultMap;
             
     public PopulationPaintPanel(Population[] people, Map<String,JLabel> labels,
         Map<String,Boolean> factors,boolean groupEvent,
@@ -70,7 +62,6 @@ public class PopulationPaintPanel extends JPanel{
         this.testingCheck = factors.get("testingCheck");
         this.groupBox=groupBox;
         this.groupEvent=groupEvent;
-        this.populationNum=populationNum;
         this.ballH = parametersMap.get("populationBallHeight");
         this.ballW = parametersMap.get("populationBallWidth");
         this.asymptoticFraction = parametersMap.get("asymptoticFraction");
@@ -79,6 +70,7 @@ public class PopulationPaintPanel extends JPanel{
 
     }
 
+    @Override
     public void paintComponent(Graphics page) {
         
         super.paintComponents(page);
@@ -95,11 +87,11 @@ public class PopulationPaintPanel extends JPanel{
             Map<String, Integer> map = new HashMap<>();
 
             switch (people[i].getStatus()) {
-                case 0:
+                case 0:                                  //Healthy condition
                     page.setColor(Color.green);
                     healthy++;
                     break;
-                case 1:
+                case 1:                                //Infected condition
                     if(!testingCheck){       //If Testing is checked, all infected person would be prominent.
                         asymptoticPeople++;
                         if((asymptoticPeople%asymptoticFraction)==0){  // Every 3rd person is asymptotic
@@ -112,19 +104,19 @@ public class PopulationPaintPanel extends JPanel{
                     }
                     infected++;
                     break;
-                case 2:
+                case 2:                                 //Severe or Hospitalized
                     page.setColor(new Color(146,0,10));
                     hospitalized++;
                     break;
-                case 3:
+                case 3:                               //Recovered
                     page.setColor(Color.green);
                     recovered++;
                     break;
-                case 4:
+                case 4:                              //Dead
                     page.setColor(Color.gray);
                     dead++;
                     break;
-                case 5:
+                case 5:                              //Vaccinated person
                     page.setColor(new Color(41,171,135));
                     healthy++;
 

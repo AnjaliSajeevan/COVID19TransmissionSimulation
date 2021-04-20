@@ -36,25 +36,25 @@ import javax.swing.Timer;
 public class Dashboard extends javax.swing.JFrame {
 
     private int width=700, height=400;
-    Population[] population,populationSAR;
-    Map<String,Boolean> factorMap = new HashMap<>();
-    Map<String,JLabel> labelMap = new HashMap<>();
-    Map<String,Integer> parametersMap = new HashMap<>();
-    Timer timer,timerCheck;
-    Graph graph;
-    Rectangle groupBox = new Rectangle(100, 100, 100, 100);
-    StringBuilder log = new StringBuilder();
+    private Population[] population,populationSAR;
+    private Map<String,Boolean> factorMap = new HashMap<>();
+    private Map<String,JLabel> labelMap = new HashMap<>();
+    private Map<String,Integer> parametersMap = new HashMap<>();
+    private Timer timer,timerCheck;
+    private Graph graph;
+    private Rectangle groupBox = new Rectangle(100, 100, 100, 100);
+    private StringBuilder log = new StringBuilder();
     private JPanel simPanel;
     private JPanel simPanel2; //for sars
-    double quarantinePercentage,comorbidPercentage,hospitalCap,vaccinatedPercentage,vaccineEffectiveness,
+    private double quarantinePercentage,comorbidPercentage,hospitalCap,vaccinatedPercentage,vaccineEffectiveness,
             infectionR,infectedQuarantinePercentage,simTime;
-    long startTime;
+    private long startTime;
     private int count, quarantinedNum,comorbidityNum,r_naught,timerTriggers,recordRate = 2,
             asymptoticFraction,populationBallHeight,populationBallWidth,timerSet,populationNum, delay;
     private boolean paused = false, maskCheck=false, testingCheck=false, vaccineCheck=false, 
             quarantineCheck=false, distancingCheck=false, remoteCheck=false, allCheck=false,groupEvent=false;  
     private String parameters="",separator = "";
-    boolean firstRun,restartFlag;
+    private boolean firstRun,restartFlag;
 
     
     /**
