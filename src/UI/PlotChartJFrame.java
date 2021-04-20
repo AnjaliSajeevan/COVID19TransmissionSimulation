@@ -28,7 +28,7 @@ public class PlotChartJFrame extends JFrame {
     String r0;
     
     public PlotChartJFrame(Map<Integer, Map<String, Integer>> resultsMap, String r0) {
-        super("Covid-19 Simulator Plot");
+        super("Covid-19 Simulator Plot - Latest Run");
 
         this.resultsMap = resultsMap;
         this.r0 = r0;
@@ -42,7 +42,7 @@ public class PlotChartJFrame extends JFrame {
  
     public JPanel drawChartPanel() {
         String r = r0.equals("") ? "0" : r0;
-        String chartTitle = "Covid-19 Simulator Plot With (Basic Reproduction Number) R-Naught: " + r;
+        String chartTitle = "Covid-19 Simulator Plot (Latest Run) With R-Naught: " + r;
         String xAxisLabel = "Days";
         String yAxisLabel = "Population";
  

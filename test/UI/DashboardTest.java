@@ -75,9 +75,9 @@ public class DashboardTest {
         // Act & Assert
         // [No Assert.DoesNotThrow(() => MyMethod()); in JUnit4. :( ]
         try {
-            Dashboard.main(null);
+            instance.main(args);
         } catch (Exception exception){
             Assert.fail();
         }
-    }    
+    }
 }

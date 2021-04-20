@@ -51,6 +51,7 @@ public class Dashboard extends javax.swing.JFrame {
     Rectangle groupBox = new Rectangle(100, 100, 100, 100);
     
     StringBuilder log = new StringBuilder();
+    String separator = "";
     
     /**
      * Creates new form Dashboard
@@ -2338,7 +2339,7 @@ public void initializeSimulation(){
         final int[] countForNewLine = {0};
         map.forEach((t, m) -> {
             countForNewLine[0]++;
-            stringBuilder.append("Day: ").append(t/45)
+            stringBuilder.append("Days: ").append(t/45).append(" | ")
                 .append(" Healthy: ").append(m.get("Healthy"))
                 .append(" Infected: ").append(m.get("Infected"))
                 .append(" Asymptomatic: ").append(m.get("Asymptomatic"))
@@ -2346,18 +2347,34 @@ public void initializeSimulation(){
                 .append(" Recovered: ").append(m.get("Recovered"))
                 .append(" Dead: ").append(m.get("Dead"))
                 .append(" | ");
-
-            //if(countForNewLine[0] % 2 == 0)
-                //stringBuilder.append("\n");
         });
 
-        log.append("\nStart Simulation----------------------------------------------------------------------------------------------------------------------------------------------------")
-                .append("\n");
-        log.append(stringBuilder.substring(stringBuilder.lastIndexOf("Day: ")));
-        log.append("\nEnd Simulation------------------------------------------------------------------------------------------------------------------------------------------------------")
-                .append("\n");
+        printDash("\nStart Simulation");
+        log.append(stringBuilder.substring(stringBuilder.lastIndexOf("Days: ")));
+        log.append("When Ro: ").append(r_naught).append(" | ")
+            .append(" All Factors Selected: ").append(checkSelectAll.isSelected()).append(" | ")
+            .append(" Testing & Contact Tracing: ").append(checkTestingAndTracing.isSelected()).append(" | ")
+            .append(" Vaccine Efficacy: ").append(checkVaccine.isSelected()).append(" | ")
+            .append(" Quarantining Area: ").append(checkQuarantine.isSelected()).append(" | ")
+            .append(" Mask & Distancing: ").append(checkSocialDistancing.isSelected()).append(" | ")
+            .append(" Remote Setting: ").append(checkRemote.isSelected()).append(" | ")
+            .append(" Confined Gathering: ").append(checkGroupEvent.isSelected());
+        printDash("\nEnd Simulation");
         populationLabel.setLineWrap(true);
         populationLabel.setText(log.toString());
+    }
+
+    private void printDash(String message) {
+        if(separator == null || separator.isEmpty()){
+            StringBuilder dash = new StringBuilder();
+            for (int i = 0; i < 350; i++) {
+                dash.append("-");
+            }
+            separator = dash.toString();
+            dash.setLength(0);
+        }
+
+        log.append(message).append(separator).append("\n");
     }
 
     private void checkGroupEventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkGroupEventActionPerformed
