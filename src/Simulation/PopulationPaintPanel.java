@@ -176,7 +176,7 @@ public class PopulationPaintPanel extends JPanel{
         //graph plot
         for(GraphPlot p:points){
             page.setColor(Color.RED);
-            page.fillOval(p.time,620-p.infectedNumbers/2,5,5);
+            page.fillOval(p.time,630-p.infectedNumbers/3,5,5);
         }
 
         //groupEvent

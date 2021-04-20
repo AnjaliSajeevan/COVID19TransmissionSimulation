@@ -61,9 +61,9 @@ public class Graph {
     }
 
     public void printGraph(){
-
+        System.out.println("--------------Contact Tracing-------------------------");
         for(Vertex v : nodes){
-            System.out.print("Person: "+ v.getName() + ": ");
+            System.out.print("Person: "+ v.getName() + " -> ");
             for(Edge e : v.getEdges()){
                 System.out.print("infected: " + e.getDestVertex().getName() + " | ");
             }
