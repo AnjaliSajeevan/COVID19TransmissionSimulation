@@ -343,8 +343,11 @@ public void initializeSimulation(){
                 checkSelectAll.setEnabled(true);
                 
                 populationSlider.setEnabled(true);
+                RNaughtValue.setEnabled(true);
+                timerArea.setEnabled(true);
                 
                 graph.printGraph();
+                printResults();
             }
         });
         timerCheck.start();
