@@ -7,19 +7,13 @@ package UI;
 
 import javax.swing.JPanel;
 
-import org.jfree.data.DomainOrder;
-import org.jfree.data.general.DatasetChangeListener;
-import org.jfree.data.general.DatasetGroup;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.TreeMap;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
@@ -71,10 +65,10 @@ public class PlotChartJFrameTest {
     }
 
     /**
-     * Test of createDataset method, of class PlotChartJFrame.
+     * Test of getData method, of class PlotChartJFrame.
      */
     @Test
-    public void testCreateDataset() {
+    public void testGetData() {
         // Arrange
         System.out.println("createDataset");
 

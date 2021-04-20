@@ -47,7 +47,7 @@ public class PopulationTest {
      */
     @Test
     public void testCheck() {
-        // Arrange - ToDo.
+        // Arrange
         System.out.println("check");
         int infectedQuarantineNum = 0;
         boolean quarantineCheck = false;
@@ -287,5 +287,4 @@ public class PopulationTest {
         // Assert
         assertEquals(instance.getInfectTime(), System.currentTimeMillis());
     }
-    
 }

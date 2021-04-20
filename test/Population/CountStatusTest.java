@@ -90,7 +90,7 @@ public class CountStatusTest {
     @After
     public void tearDown() {
         instance = null;
-        conditions = null;
+        conditions.clear();
     }
 
     /**
