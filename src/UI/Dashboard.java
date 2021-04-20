@@ -30,9 +30,9 @@ public class Dashboard extends javax.swing.JFrame {
     private int populationNum, delay;
     private int width=700, height=400;
     Population[] population,populationSAR;
-    Map<String,Boolean> factorMap = new HashMap<String,Boolean>();
-    Map<String,JLabel> labelMap = new HashMap<String,JLabel>();
-    Map<String,Integer> parametersMap = new HashMap<String,Integer>();
+    Map<String,Boolean> factorMap = new HashMap<>();
+    Map<String,JLabel> labelMap = new HashMap<>();
+    Map<String,Integer> parametersMap = new HashMap<>();
     double quarantinePercentage,comorbidPercentage,hospitalCap,vaccinatedPercentage,vaccineEffectiveness,
             infectionR,infectedQuarantinePercentage;
     int asymptoticFraction,populationBallHeight,populationBallWidth,timerSet;
@@ -179,12 +179,15 @@ public void initializeSimulation(){
         //Assign type of population
         /*
             Population Parameters:
-            1. X position in panel
-            2. Y position in Panel
-            3. infected condition
-            4. quarantined condition
-            5. Comorbidity condition
-            6. compareVirus (true = Sars Virus ; false = Covid Virus)
+            1. X coordinate of person in panel
+            2. Y coordinate of person in Panel
+            3. Factors considered for the population (Eg: distancing, vaccinated, remote, etc)
+            4. Hospital capacity
+            5. Boolean value stating whether there is a group event in the scenario.
+            6. Group box paramters
+            7. Population count
+            8. Boolean value stating type of virus population. Eg: True : SARS-COV virus, false: SARS-COV-2 virus
+            9. R0 value
         */
         quarantinedNum = (int)(quarantinePercentage * populationNum);
         comorbidityNum = (int) (comorbidPercentage  * populationNum);
@@ -268,18 +271,15 @@ public void initializeSimulation(){
 
 
         //Set the timer and update the status of population
-        timer = new Timer(delay,new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-               for (Population p : population) {
-                    p.countStatus();
-               }
-              repaint();
-              for (Population ps : populationSAR) {
-                    ps.countStatus();
-               }
-                repaint();
-            }           
+        timer = new Timer(delay, (ActionEvent ae) -> {
+            for (Population p : population) {
+                p.countStatus();
+            }
+            repaint();
+            for (Population ps : populationSAR) {
+                ps.countStatus();
+            }
+            repaint();           
         });
     }
 
@@ -317,33 +317,29 @@ public void initializeSimulation(){
     }
 
     public void checkTimer(){
-        timerCheck = new Timer(0,new ActionListener(){
-      
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                    simTime = ((System.currentTimeMillis()) - (startTime)) / 1000F;
+        timerCheck = new Timer(0, (ActionEvent ae) -> {
+            simTime = ((System.currentTimeMillis()) - (startTime)) / 1000F;
             
-                        if(simTime >= timerSet){
-                            timer.stop();
-                            timerCheck.stop();
-                            restartFlag= true;
-                            paused=true;
-                            firstRun=true;                         //Reset Start to firstRun
-                            buttonStart.setEnabled(true);
-                            buttonStop.setEnabled(false);
-                            buttonResume.setEnabled(false);
-                            buttonPause.setEnabled(false);
-                            checkTestingAndTracing.setEnabled(true);
-                            checkVaccine.setEnabled(true);
-                            checkRemote.setEnabled(true);
-                            checkQuarantine.setEnabled(true);
-                            checkSocialDistancing.setEnabled(true);
-                            checkSelectAll.setEnabled(true);
-        
-                            populationSlider.setEnabled(true);
-
-                            graph.printGraph();
-                        }
+            if(simTime >= timerSet){
+                timer.stop();
+                timerCheck.stop();
+                restartFlag= true;
+                paused=true;
+                firstRun=true;                         //Reset Start to firstRun
+                buttonStart.setEnabled(true);
+                buttonStop.setEnabled(false);
+                buttonResume.setEnabled(false);
+                buttonPause.setEnabled(false);
+                checkTestingAndTracing.setEnabled(true);
+                checkVaccine.setEnabled(true);
+                checkRemote.setEnabled(true);
+                checkQuarantine.setEnabled(true);
+                checkSocialDistancing.setEnabled(true);
+                checkSelectAll.setEnabled(true);
+                
+                populationSlider.setEnabled(true);
+                
+                graph.printGraph();
             }
         });
         timerCheck.start();
@@ -2250,7 +2246,7 @@ public void initializeSimulation(){
     }//GEN-LAST:event_checkTestingAndTracingActionPerformed
 
     private void buttonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStartActionPerformed
-        // TODO add your handling code here:
+
         buttonStart.setEnabled(false);
         buttonPause.setEnabled(true);
         buttonResume.setEnabled(false);
@@ -2272,7 +2268,7 @@ public void initializeSimulation(){
         checkQuarantine.setEnabled(false);
         checkSocialDistancing.setEnabled(false);
         checkSelectAll.setEnabled(false);
-        startTime = System.currentTimeMillis();        
+        startTime = System.currentTimeMillis();     //Tracking start time for timer.    
         getSimulation();
         if(timerSet >0){           //Timed Simulation
             checkTimer();
