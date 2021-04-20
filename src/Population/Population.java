@@ -7,7 +7,6 @@ package Population;
 
 import Graph.Graph;
 import Graph.Vertex;
-import UI.Dashboard;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,26 +15,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * This program will check the interaction of population , update their health condition (status) and update their position in the 
+ * simulation panel.
  * @author Manasa
  */
 public class Population {
 
-    private double x, y, xTemp, yTemp;
     Rectangle mainPanel = new Rectangle(0, 0, 700, 400);
-    private int status; // 0 for healthy, 1 for infected, 2 for hospitalized , 3 for recovered, 4 for dead
+    Rectangle groupBox;
+    Map<String,Integer> map= new HashMap<>();
+    private int status; // 0 for healthy, 1 for infected, 2 for hospitalized , 3 for recovered, 4 for dead, 5 for vaccinated
     private int countInfected, hospitalCapacity,countHospitalized;
     private boolean firstInfected,quarantined,distancing,vaccinated,prone, ignore, comorbidity,compareVirus;
-    private double risk;
+    private double risk,x_f,y_f,x, y, xTemp, yTemp;
     private long infectTime;
-    private double x_f;
-    private double y_f;
-    private int populationNum,r_naught,tempCount,infectCount;
+    private int populationNum,r_naught,tempCount,infectCount,Collisioncount=0;
     boolean groupEvent;
-    Rectangle groupBox;
     private String code;
-    private int Collisioncount=0;
-    Map<String,Integer> map= new HashMap<String,Integer>();
 
 
     public Population(int x, int y,Map<String,Boolean> conditions,
@@ -49,7 +45,7 @@ public class Population {
         this.groupBox=groupBox;
         this.r_naught = r_naught;
         this.infectCount = 0;
-        this.compareVirus = compareVirus; //Sar Virus(Type2 virus)
+        this.compareVirus = compareVirus; //SAR-CoV Virus(Type2 comparison virus)
         this.comorbidity = conditions.get("comorbidity");
         this.hospitalCapacity = hospitalCapacity;
         this.prone = conditions.get("prone");
@@ -105,11 +101,11 @@ public class Population {
     }
 
     public void countStatus() {
-        x_f = x + xTemp;
-        y_f = y + yTemp;
         if(status == 4 ){
             return;
         }
+        x_f = x + xTemp;
+        y_f = y + yTemp;
         if ((status != 2 && status != 4) && (!quarantined)) {
             if (groupEvent == true) {
 
@@ -158,14 +154,14 @@ public class Population {
                        status = 2;
                     }
                 }else{
-                       if(difference >= 5 ){
+                       if(difference >= 5 ){                 //5ms after infection the person recovers . (5ms is mapped to 15 days)
                            status = 3;
                        }                  
                 }
 
             } else if (status == 2) {//hospitalized
-                double infectTime = ((System.currentTimeMillis()) - (this.getInfectTime())) / 1000F;
-                if(infectTime >= 3 ){
+                double infectTime = ((System.currentTimeMillis()) - (this.getInfectTime())) / 1000F; 
+                if(infectTime >= 3 ){                                      
                     if (comorbidity){//dead
                         status = 4;
                     }
