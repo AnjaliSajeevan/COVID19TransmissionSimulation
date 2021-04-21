@@ -42,7 +42,10 @@ The transmission of SARS-CoV-2 virus is also compared with SARS-CoV.
 - IntelliJ
 
 ## Simulation Panel
-The Pane will show constraints(factors) , population counts for different health conditions, legends and assumptions along with the simulation of SAR-CoV and SAR-CoV-2 virus.
+The panel will show all the constraints(factors) , population counts for different health conditions, legends and assumptions along with the simulation of SAR-CoV and SAR-CoV-2 virus.
+
+## Configuration file
+We use config.ini file to configure infection parameters, vaccine parameters, 2D Graphic component size and certain other conditions like hospital capacity. (More details are given in the config.ini file)
 
 ## Simulation Run
 - The simulation will begin with the click of START button in the panel. Constraints can be selected from the available checkboxes in the left pane. Population slider is available to choose the number of population. R naught value is user defined.
@@ -55,5 +58,4 @@ The Pane will show constraints(factors) , population counts for different health
 - The Plot button helps charting a graph which outlines the growth/decrease in the number of healthy, infected, hospitalized, or dead over the interval of days.
 - The log pane at the bottom will display the number of infected, healthy, recovered and dead people relative to time (in days) along with the different parameters/constraints selected.
 
-## Configuration file
-We use config.ini file to configure infection parameters, vaccine parameters, 2D Graphic component size and certain other conditions like hospital capacity. (More details are given in the config.ini file)
+
