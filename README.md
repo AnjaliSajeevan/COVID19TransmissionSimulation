@@ -36,3 +36,6 @@ The transmission of SARS-CoV-2 virus is also compared with SARS-CoV.
 ## Development Tools
 - Java SDK
 - Netbeans IDE
+
+##Simulation Panel
+The Pane will show constraints(factors) , population counts for different health conditions, legends and assumptions along with the simulation of SAR-CoV and SAR-CoV-2 virus.
