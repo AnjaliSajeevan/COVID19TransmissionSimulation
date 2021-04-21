@@ -45,3 +45,7 @@ The simulation will begin with the click of START button in the panel. Constrain
 This simulation can also be timed. We need give time in milliseconds along with population and constraints.
 The simulation has START,STOP, RESUME and PAUSE buttons.
 
+##Simulation Output
+Population counts on different health conditions for the simulation can be viewed at the top pane. The panel shows real time infection rate graph right below the simulation.
+On click of PLOT button you can see the infection growth rate on various health conditions which is created using JFree chart.
+The log pane at the bottom will display the number of infected, healthy, recovered and dead people relative to time (in days)
