@@ -37,15 +37,15 @@ The transmission of SARS-CoV-2 virus is also compared with SARS-CoV.
 - Java SDK
 - Netbeans IDE
 
-##Simulation Panel
+## Simulation Panel
 The Pane will show constraints(factors) , population counts for different health conditions, legends and assumptions along with the simulation of SAR-CoV and SAR-CoV-2 virus.
 
-##Simulation Run
+## Simulation Run
 The simulation will begin with the click of START button in the panel. Constraints can be chosen from the available checkboxes in the left pane. Population slider is available to consider. R-naught value also is user defined.
 This simulation can also be timed. We need give time in milliseconds along with population and constraints.
 The simulation has START,STOP, RESUME and PAUSE buttons.
 
-##Simulation Output
+## Simulation Output
 Population counts on different health conditions for the simulation can be viewed at the top pane. The panel shows real time infection rate graph right below the simulation.
 On click of PLOT button you can see the infection growth rate on various health conditions which is created using JFree chart.
 The log pane at the bottom will display the number of infected, healthy, recovered and dead people relative to time (in days)
