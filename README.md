@@ -17,7 +17,7 @@ The aim of the project is to simulate a SARS-CoV-2 virus and analyze the effecti
 
 The transmission of SARS-CoV-2 virus is also compared with SARS-CoV.
 
-## Usage
+## Setup
  - first download and install jdk_8 here
  - setup the JAVA_HOME system variable
  - Clone or fork this repository.
@@ -42,18 +42,20 @@ The transmission of SARS-CoV-2 virus is also compared with SARS-CoV.
 - IntelliJ
 
 ## Simulation Panel
-The Pane will show constraints(factors) , population counts for different health conditions, legends and assumptions along with the simulation of SAR-CoV and SAR-CoV-2 virus.
-
-## Simulation Run
-The simulation will begin with the click of START button in the panel. Constraints can be chosen from the available checkboxes in the left pane. Population slider is available to consider. R-naught value also is user defined.
-This simulation can also be timed. We need give time in milliseconds along with population and constraints.
-The simulation has START,STOP, RESUME and PAUSE buttons.
-A graph can be plotted during the simulation to outline the growth of infection over the time interval (in days).
-
-## Simulation Output
-Population counts on different health conditions for the simulation can be viewed at the top pane. The panel shows real time infection rate graph right below the simulation.
-The Plot button helps charting a graph which outlines the growth/decrease in the number of healthy, infected, hospitalized, or dead over the interval of days.
-The log pane at the bottom will display the number of infected, healthy, recovered and dead people relative to time (in days) along with the different parameters/constraints selected.
+The panel will show all the constraints(factors) , population counts for different health conditions, legends and assumptions along with the simulation of SAR-CoV and SAR-CoV-2 virus.
 
 ## Configuration file
-We use config.ini file to configure infection parameters, vaccine parameters, 2D Graphic component size and certain other conditions like hospital capacity. (More details given in the config.ini file)
+We use config.ini file to configure infection parameters, vaccine parameters, 2D Graphic component size and certain other conditions like hospital capacity. (More details are given in the config.ini file)
+
+## Simulation Run
+- The simulation will begin with the click of START button in the panel. Constraints can be selected from the available checkboxes in the left pane. Population slider is available to choose the number of population. R naught value is user defined.
+- This simulation can also be timed,we need to give time in milliseconds along with the number of population and constraints.
+- The simulation has START,STOP, RESUME and PAUSE buttons.
+- A graph can be plotted during the simulation to outline the growth of infection over the time interval (in days).
+
+## Simulation Output
+- Population count of different health conditions for the simulation run can be viewed at the top pane. The panel shows real time infection rate graph right below the simulation.
+- The Plot button helps charting a graph which outlines the growth/decrease in the number of healthy, infected, hospitalized, or dead over the interval of days.
+- The log pane at the bottom will display the number of infected, healthy, recovered and dead people relative to time (in days) along with the different parameters/constraints selected.
+
+

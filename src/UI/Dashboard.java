@@ -282,9 +282,9 @@ public void initializeSimulation(){
             }
             repaint();
             for (Population ps : populationSAR) {
-                ps.countStatus();
+                ps.countStatus();   //update the health condition and x y coordinates of people
             }
-            repaint();           
+            repaint();           //update the color coding for corresponding health status
         });
     }
 
@@ -2333,7 +2333,7 @@ public void initializeSimulation(){
         printResults();
         
     }//GEN-LAST:event_buttonStopActionPerformed
-
+    //Prints the population count for various health conditions relative to days.
     private void printResults() {
         StringBuilder stringBuilder = new StringBuilder();
         Map<Integer, Map<String, Integer>> map = ((PopulationPaintPanel)simPanel).getResultMap();
