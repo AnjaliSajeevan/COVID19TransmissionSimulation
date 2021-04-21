@@ -7,13 +7,13 @@ The virus transmission simulation project is developed using Java and the simula
 
 The aim of the project is to simulate a SARS-CoV-2 virus and analyze the effectiveness of various preventive measures. The following constraints/factors are taken into consideration for the simulation:
 
--The R-naught and k factor of the disease
--The usage and effectiveness of masks and social distancing
--The prevalence of testing and contact tracing
--The availability and efficacy of the vaccine
--Remote work and schools
--Quarantine
--Group event
+- The R-naught and k factor of the disease
+- The usage and effectiveness of masks and social distancing
+- The prevalence of testing and contact tracing
+- The availability and efficacy of the vaccine
+- Remote work and schools
+- Quarantine
+- Group event
 
 The transmission of SARS-CoV-2 virus is also compared with SARS-CoV.
 
@@ -32,5 +32,5 @@ The transmission of SARS-CoV-2 virus is also compared with SARS-CoV.
 - Java
 
 ##Development Tools
--Java SDK
--Netbeans IDE
+- Java SDK
+- Netbeans IDE
