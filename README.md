@@ -39,3 +39,9 @@ The transmission of SARS-CoV-2 virus is also compared with SARS-CoV.
 
 ##Simulation Panel
 The Pane will show constraints(factors) , population counts for different health conditions, legends and assumptions along with the simulation of SAR-CoV and SAR-CoV-2 virus.
+
+##Simulation Run
+The simulation will begin with the click of START button in the panel. Constraints can be chosen from the available checkboxes in the left pane. Population slider is available to consider. R-naught value also is user defined.
+This simulation can also be timed. We need give time in milliseconds along with population and constraints.
+The simulation has START,STOP, RESUME and PAUSE buttons.
+
