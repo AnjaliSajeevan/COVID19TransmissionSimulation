@@ -26,7 +26,7 @@ The transmission of SARS-CoV-2 virus is also compared with SARS-CoV.
 ```
 
 ## Demo
-[![Watch the demo](https://i.imgur.com/vKb2F1B.png)](https://drive.google.com/file/d/1Qg5RN25oT5t017FxmI4W8RkEqP1Ayza9/view?usp=sharing)
+[![Watch the demo](demo/play.gif)](https://drive.google.com/file/d/1Qg5RN25oT5t017FxmI4W8RkEqP1Ayza9/view?usp=sharing)
 
 ## Required Jar files 
 - ini4j-0.5.1.jar
