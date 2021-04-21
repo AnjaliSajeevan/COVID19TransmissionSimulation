@@ -5,6 +5,7 @@
  */
 package Population;
 
+import Graph.Graph;
 import org.junit.*;
 import java.util.*;
 
@@ -31,7 +32,8 @@ public class PopulationTest {
 
     @Before
     public void setUp() {
-        instance = new Population(100, 100, conditions, 500);
+        instance = new Population(100, 100, conditions, 500, 
+                false, null, 1000, false, 0);
     }
     
     @After
@@ -45,14 +47,14 @@ public class PopulationTest {
      */
     @Test
     public void testCheck() {
-        // Arrange - ToDo.
+        // Arrange
         System.out.println("check");
         int infectedQuarantineNum = 0;
         boolean quarantineCheck = false;
         int expResult = 0;
 
         // Act
-        int result = instance.check(instance, infectedQuarantineNum, quarantineCheck);
+        int result = instance.check(instance, infectedQuarantineNum, quarantineCheck, new Graph());
 
         // Assert
         assertEquals(expResult, result);
@@ -285,5 +287,4 @@ public class PopulationTest {
         // Assert
         assertEquals(instance.getInfectTime(), System.currentTimeMillis());
     }
-    
 }

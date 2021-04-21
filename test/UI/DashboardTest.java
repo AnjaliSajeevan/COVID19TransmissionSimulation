@@ -7,8 +7,6 @@ package UI;
 
 import org.junit.*;
 
-import static org.junit.Assert.*;
-
 /**
  *
  * @author moumita
@@ -26,7 +24,7 @@ public class DashboardTest {
     
     @After
     public void tearDown() {
-        instance = null;
+        //instance = null;
     }
 
     /**
@@ -34,10 +32,16 @@ public class DashboardTest {
      */
     @Test
     public void testInitializeSimulation() {
-        // Arrange - ToDo.
+        // Arrange
         System.out.println("initializeSimulation");
 
-        instance.initializeSimulation();
+        // Act & Assert
+        // [No Assert.DoesNotThrow(() => MyMethod()); in JUnit4. :( ]
+        try {
+            instance.initializeSimulation();
+        } catch (Exception exception){
+            Assert.fail();
+        }
     }
 
     /**
@@ -45,31 +49,16 @@ public class DashboardTest {
      */
     @Test
     public void testGetSimulation() {
-        // Arrange - ToDo.
-        System.out.println("getSimulation");
-        Dashboard.main(null);
-        instance.initializeSimulation();
-
-        instance.getSimulation();
-    }
-
-    /**
-     * Test of main method, of class Dashboard.
-     * The main function shouldn't throw any exception.
-     */
-    @Test
-    public void testMain() {
         // Arrange
-        System.out.println("main");
-        String[] args = null;
+        System.out.println("getSimulation");
+        instance.initializeSimulation();
 
         // Act & Assert
         // [No Assert.DoesNotThrow(() => MyMethod()); in JUnit4. :( ]
         try {
-            Dashboard.main(args);
+            instance.getSimulation();
         } catch (Exception exception){
             Assert.fail();
         }
     }
-    
 }
