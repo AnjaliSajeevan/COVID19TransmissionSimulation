@@ -19,7 +19,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 /**
- *
+ * This program uses JFree chart to plot the infection growth rate with respect to time.
  * @author moumita
  */
 public class PlotChartJFrame extends JFrame {
@@ -65,7 +65,6 @@ public class PlotChartJFrame extends JFrame {
         XYSeries recovered = new XYSeries("Recovered");
         XYSeries hospitalized = new XYSeries("Hospitalized");
         XYSeries dead = new XYSeries("Dead");
-        //XYSeries asymptotic = new XYSeries("Asymptomatic");
 
         resultsMap.forEach((t,m) -> {
             t /= 90; // Factor the milliseconds to days.
@@ -74,7 +73,6 @@ public class PlotChartJFrame extends JFrame {
             recovered.add(t, m.get("Recovered"));
             hospitalized.add(t, m.get("Hospitalized"));
             dead.add(t, m.get("Dead"));
-            //asymptotic.add(t, m.get("Asymptomatic"));
         }); 
  
         data.addSeries(healthy);
@@ -82,7 +80,6 @@ public class PlotChartJFrame extends JFrame {
         data.addSeries(recovered);
         data.addSeries(hospitalized);
         data.addSeries(dead);
-        //data.addSeries(asymptotic);
  
         return data;
     }
