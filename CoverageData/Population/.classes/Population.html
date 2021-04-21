@@ -50,18 +50,18 @@
 </td>
 <td class="coverageStat">
   <span class="percent">
-    100%
+    78.1%
   </span>
   <span class="absValue">
-    (24/ 24)
+    (25/ 32)
   </span>
 </td>
 <td class="coverageStat">
   <span class="percent">
-    80.3%
+    55.6%
   </span>
   <span class="absValue">
-    (94/ 117)
+    (119/ 214)
   </span>
 </td>
 </tr>
@@ -79,242 +79,431 @@
 <i>5</i>&nbsp; */
 <i>6</i>&nbsp;package Population;
 <i>7</i>&nbsp;
-<i>8</i>&nbsp;import UI.Dashboard;
-<i>9</i>&nbsp;import java.util.Map;
-<i>10</i>&nbsp;
-<i>11</i>&nbsp;/**
-<i>12</i>&nbsp; *
-<i>13</i>&nbsp; * @author Manasa
-<i>14</i>&nbsp; */
-<i>15</i>&nbsp;public class Population {
-<i>16</i>&nbsp;    
-<i>17</i>&nbsp;
-<i>18</i>&nbsp;    private double x, y, xTemp, yTemp;
-<b class="fc"><i>19</i>&nbsp;    private int width= 700, height = 400;</b>
-<i>20</i>&nbsp;    private int status; // 0 for healthy, 1 for infected, 2 for hospitalized , 3 for recovered, 4 for dead
-<i>21</i>&nbsp;    private int countInfected, hospitalCapacity,countHospitalized,vaccineEffective;
-<i>22</i>&nbsp;    private boolean firstInfected,quarantined,distancing,vaccinated,prone, ignore, comorbidity,compareVirus;
-<i>23</i>&nbsp;    private double risk;
-<i>24</i>&nbsp;    private long infectTime;
-<i>25</i>&nbsp;
-<i>26</i>&nbsp;
-<b class="fc"><i>27</i>&nbsp;    public Population(int x, int y,Map&lt;String,Boolean&gt; conditions ,int hospitalCapacity) {</b>
-<b class="fc"><i>28</i>&nbsp;        this.x = x;</b>
-<b class="fc"><i>29</i>&nbsp;        this.y = y;</b>
-<b class="fc"><i>30</i>&nbsp;        this.compareVirus = conditions.get(&quot;compareVirus&quot;); //Sar Virus(Type2 virus)</b>
-<b class="fc"><i>31</i>&nbsp;        this.comorbidity = conditions.get(&quot;comorbidity&quot;);</b>
-<b class="fc"><i>32</i>&nbsp;        this.hospitalCapacity = hospitalCapacity;</b>
-<b class="fc"><i>33</i>&nbsp;        this.prone = conditions.get(&quot;prone&quot;);</b>
-<b class="fc"><i>34</i>&nbsp;        risk = Math.random();</b>
-<b class="fc"><i>35</i>&nbsp;        this.distancing = conditions.get(&quot;distancingCheck&quot;);</b>
-<b class="fc"><i>36</i>&nbsp;        if(distancing){     //Displacement is less to keep distance from others.</b>
-<b class="fc"><i>37</i>&nbsp;        xTemp = 0.4;</b>
-<b class="fc"><i>38</i>&nbsp;        yTemp = Math.sqrt(4 - Math.pow(xTemp, 2)) * (Math.random() &lt; 0.5 ? -0.4 : 0.4);</b>
-<i>39</i>&nbsp;        }else{          //Usually displacement between 0.4 to 1.9
-<b class="fc"><i>40</i>&nbsp;        xTemp = Math.random() * 4.0 - 2.0;</b>
-<b class="fc"><i>41</i>&nbsp;        yTemp = Math.sqrt(4 - Math.pow(xTemp, 2)) * (Math.random() &lt; 0.5 ? -1.0 : 1.0);</b>
-<i>42</i>&nbsp;        }
-<b class="fc"><i>43</i>&nbsp;        countInfected = 0;</b>
-<b class="fc"><i>44</i>&nbsp;        countHospitalized = 0;</b>
-<b class="fc"><i>45</i>&nbsp;        status = (conditions.get(&quot;infected&quot;) ? 1 : 0);</b>
-<b class="fc"><i>46</i>&nbsp;        firstInfected = conditions.get(&quot;infected&quot;);</b>
-<b class="fc"><i>47</i>&nbsp;        this.quarantined = conditions.get(&quot;quarantine&quot;);</b>
-<b class="fc"><i>48</i>&nbsp;        this.vaccinated = conditions.get(&quot;vaccinated&quot;);</b>
-<b class="fc"><i>49</i>&nbsp;        if(vaccinated){</b>
-<b class="fc"><i>50</i>&nbsp;            status = 5;</b>
-<i>51</i>&nbsp;        }
-<b class="fc"><i>52</i>&nbsp;    }</b>
-<i>53</i>&nbsp;
-<i>54</i>&nbsp;    public void countStatus() {
-<b class="fc"><i>55</i>&nbsp;        if ((status != 2 &amp;&amp; status != 4) &amp;&amp; (!quarantined)) {</b>
-<b class="fc"><i>56</i>&nbsp;            if (!compareVirus) {</b>
-<b class="nc"><i>57</i>&nbsp;                if (x + xTemp + 10 &gt; width || x + xTemp &lt; 0) {</b>
-<b class="nc"><i>58</i>&nbsp;                    xTemp = -xTemp;</b>
-<i>59</i>&nbsp;                }
-<b class="nc"><i>60</i>&nbsp;                if (y + yTemp + 10 &gt; height || y + yTemp &lt; 0) {</b>
-<b class="nc"><i>61</i>&nbsp;                    yTemp = -yTemp;</b>
-<i>62</i>&nbsp;                }
-<i>63</i>&nbsp;            } else {
-<b class="fc"><i>64</i>&nbsp;                if (x + xTemp + 10 &gt; width * 2 || x + xTemp &lt; Dashboard.WIDTH) {</b>
-<b class="nc"><i>65</i>&nbsp;                    xTemp = -xTemp;</b>
-<i>66</i>&nbsp;                }
-<b class="fc"><i>67</i>&nbsp;                if (y + yTemp + 10 &gt; height || y + yTemp &lt; 0) {</b>
-<b class="nc"><i>68</i>&nbsp;                    yTemp = -yTemp;</b>
-<i>69</i>&nbsp;                }
-<i>70</i>&nbsp;            }
-<b class="fc"><i>71</i>&nbsp;            x += xTemp;</b>
-<b class="fc"><i>72</i>&nbsp;            y += yTemp;</b>
-<i>73</i>&nbsp;        }
-<b class="fc"><i>74</i>&nbsp;       double difference = ((System.currentTimeMillis()) - (this.getInfectTime())) / 1000F;</b>
-<b class="fc"><i>75</i>&nbsp;        if (!firstInfected) {</b>
-<b class="fc"><i>76</i>&nbsp;            if (status == 1) {//infected     </b>
-<b class="fc"><i>77</i>&nbsp;                if(comorbidity){</b>
-<b class="fc"><i>78</i>&nbsp;                    if(countHospitalized &lt; hospitalCapacity ) {</b>
-<b class="fc"><i>79</i>&nbsp;                        status = 2;</b>
-<b class="fc"><i>80</i>&nbsp;                        countHospitalized++;</b>
-<b class="fc"><i>81</i>&nbsp;                        this.quarantined = true;</b>
-<i>82</i>&nbsp;                    }else{
-<b class="fc"><i>83</i>&nbsp;                       status = 2;</b>
-<i>84</i>&nbsp;                    }
-<i>85</i>&nbsp;                }else{
-<b class="fc"><i>86</i>&nbsp;                       if(difference &gt;= 5 ){</b>
-<b class="fc"><i>87</i>&nbsp;                           status = 3;</b>
-<i>88</i>&nbsp;                       }                  
-<i>89</i>&nbsp;                }
-<i>90</i>&nbsp;
-<b class="fc"><i>91</i>&nbsp;            } else if (status == 2) {//hospitalized</b>
-<b class="fc"><i>92</i>&nbsp;                double infectTime = ((System.currentTimeMillis()) - (this.getInfectTime())) / 1000F;</b>
-<b class="fc"><i>93</i>&nbsp;                if(infectTime &gt;= 3 ){</b>
-<b class="fc"><i>94</i>&nbsp;                    if (comorbidity){//dead</b>
-<b class="fc"><i>95</i>&nbsp;                        status = 4;</b>
-<i>96</i>&nbsp;                    }
-<i>97</i>&nbsp;                }
-<b class="fc"><i>98</i>&nbsp;            } else if(infectTime &gt;= 5 ){ {//recovered</b>
-<b class="fc"><i>99</i>&nbsp;                    status = 3;</b>
-<b class="fc"><i>100</i>&nbsp;                    quarantined=false;</b>
-<i>101</i>&nbsp;                }
-<i>102</i>&nbsp;            }
-<i>103</i>&nbsp;        }
-<b class="fc"><i>104</i>&nbsp;    }</b>
-<i>105</i>&nbsp;
-<i>106</i>&nbsp;    public int check(Population p, int infectedQuarantineNum, boolean quarantineCheck){
-<b class="fc"><i>107</i>&nbsp;        if (!ignore) {</b>
-<b class="fc"><i>108</i>&nbsp;            if (Math.sqrt(Math.pow(x - p.getX(), 2) + Math.pow(y - p.getY(), 2)) &lt; 10) {</b>
-<b class="fc"><i>109</i>&nbsp;                if(quarantineCheck){</b>
-<b class="nc"><i>110</i>&nbsp;                if (p.getStatus() == 1 &amp;&amp; Math.random() &lt; 0.85 &amp;&amp; (status == 0 || status==3 || status ==5) &amp;&amp; (this.quarantined==false)) {</b>
-<b class="nc"><i>111</i>&nbsp;                    status = 1;</b>
-<b class="nc"><i>112</i>&nbsp;                    this.setInfectTime();</b>
-<b class="nc"><i>113</i>&nbsp;                    if(infectedQuarantineNum &gt; 0){</b>
-<b class="nc"><i>114</i>&nbsp;                    this.quarantined=true;</b>
-<b class="nc"><i>115</i>&nbsp;                    infectedQuarantineNum--;</b>
-<i>116</i>&nbsp;                    }
-<i>117</i>&nbsp;                }
-<i>118</i>&nbsp;                }else{
-<b class="fc"><i>119</i>&nbsp;                if (p.getStatus() == 1 &amp;&amp; Math.random() &lt; 0.85 &amp;&amp; (status == 0 || status==3 || status==5) ) {</b>
-<b class="nc"><i>120</i>&nbsp;                    status = 1;</b>
-<b class="nc"><i>121</i>&nbsp;                    this.setInfectTime();</b>
-<i>122</i>&nbsp;                }                    
-<i>123</i>&nbsp;                }
-<b class="fc"><i>124</i>&nbsp;                if ((!quarantined) &amp;&amp;  (status != 2) ) {</b>
-<b class="nc"><i>125</i>&nbsp;                    if(distancing){     //Displacement is less to keep distance from others.</b>
-<b class="nc"><i>126</i>&nbsp;                        xTemp = (Math.random() * 2 * (x - p.getX() &lt; 0 ? -0.4 : 0.4));</b>
-<b class="nc"><i>127</i>&nbsp;                        yTemp = (Math.sqrt(4 - Math.pow(xTemp, 2))) * (y - p.getY() &lt; 0 ? -0.4 : 0.4);</b>
-<i>128</i>&nbsp;                    }else{
-<b class="nc"><i>129</i>&nbsp;                        xTemp = (Math.random() * 2 * (x - p.getX() &lt; 0 ? -1.0 : 1.0));</b>
-<b class="nc"><i>130</i>&nbsp;                        yTemp = (Math.sqrt(4 - Math.pow(xTemp, 2))) * (y - p.getY() &lt; 0 ? -1.0 : 1.0);</b>
-<b class="nc"><i>131</i>&nbsp;                        p.ignoreCheck();</b>
-<i>132</i>&nbsp;                    }
-<i>133</i>&nbsp;                }
-<b class="fc"><i>134</i>&nbsp;                if((vaccinated) &amp;&amp; (!prone)){</b>
-<b class="nc"><i>135</i>&nbsp;                    p.ignoreCheck();</b>
-<i>136</i>&nbsp;                    
-<i>137</i>&nbsp;                }
-<b class="fc"><i>138</i>&nbsp;                if (firstInfected) {</b>
-<b class="fc"><i>139</i>&nbsp;                    firstInfected = false;</b>
-<i>140</i>&nbsp;                }
-<i>141</i>&nbsp;            }
-<i>142</i>&nbsp;        } else {
-<b class="nc"><i>143</i>&nbsp;            if(!((vaccinated) &amp;&amp; (!prone))){</b>
-<b class="nc"><i>144</i>&nbsp;            ignore = false;</b>
-<i>145</i>&nbsp;            }
-<i>146</i>&nbsp;        }
-<b class="fc"><i>147</i>&nbsp;        return infectedQuarantineNum;</b>
-<i>148</i>&nbsp;    }
-<i>149</i>&nbsp;
-<i>150</i>&nbsp;    public void ignoreCheck() {
-<b class="fc"><i>151</i>&nbsp;        ignore = true;</b>
-<b class="fc"><i>152</i>&nbsp;    }</b>
-<i>153</i>&nbsp;
-<i>154</i>&nbsp;    public void hospitalize() {
-<b class="fc"><i>155</i>&nbsp;        if (!firstInfected) {</b>
-<b class="fc"><i>156</i>&nbsp;            status = 2;</b>
-<i>157</i>&nbsp;        }
-<b class="fc"><i>158</i>&nbsp;    }</b>
-<i>159</i>&nbsp;
-<i>160</i>&nbsp;    public void kill() {
-<b class="fc"><i>161</i>&nbsp;        status = 4;</b>
-<b class="fc"><i>162</i>&nbsp;    }</b>
-<i>163</i>&nbsp;
-<i>164</i>&nbsp;    public int getStatus() {
-<b class="fc"><i>165</i>&nbsp;        return status;</b>
-<i>166</i>&nbsp;    }
-<i>167</i>&nbsp;
-<i>168</i>&nbsp;    public void setStatus(int status) {
-<b class="fc"><i>169</i>&nbsp;        this.status = status;</b>
-<b class="fc"><i>170</i>&nbsp;    }</b>
-<i>171</i>&nbsp;
-<i>172</i>&nbsp;    public double getX() {
-<b class="fc"><i>173</i>&nbsp;        return x;</b>
-<i>174</i>&nbsp;    }
-<i>175</i>&nbsp;
-<i>176</i>&nbsp;    public void setX(double x) {
-<b class="fc"><i>177</i>&nbsp;        this.x = x;</b>
-<b class="fc"><i>178</i>&nbsp;    }</b>
-<i>179</i>&nbsp;
-<i>180</i>&nbsp;    public double getY() {
-<b class="fc"><i>181</i>&nbsp;        return y;</b>
-<i>182</i>&nbsp;    }
-<i>183</i>&nbsp;
-<i>184</i>&nbsp;    public void setY(double y) {
-<b class="fc"><i>185</i>&nbsp;        this.y = y;</b>
-<b class="fc"><i>186</i>&nbsp;    }</b>
-<i>187</i>&nbsp;
-<i>188</i>&nbsp;    public boolean isInfected() {
-<b class="fc"><i>189</i>&nbsp;        return (status == 1 ? true : false);</b>
-<i>190</i>&nbsp;    }
-<i>191</i>&nbsp;
-<i>192</i>&nbsp;    public boolean isQuarantined() {
-<b class="fc"><i>193</i>&nbsp;        return quarantined;</b>
-<i>194</i>&nbsp;    }
-<i>195</i>&nbsp;
-<i>196</i>&nbsp;    public void setQuarantined(boolean quarantined) {
-<b class="fc"><i>197</i>&nbsp;        this.quarantined = quarantined;</b>
-<b class="fc"><i>198</i>&nbsp;    }</b>
-<i>199</i>&nbsp;    
-<i>200</i>&nbsp;
-<i>201</i>&nbsp;    public long getInfectTime() {
-<b class="fc"><i>202</i>&nbsp;        return this.infectTime;</b>
-<i>203</i>&nbsp;    }
-<i>204</i>&nbsp;
-<i>205</i>&nbsp;    public void setInfectTime() {
-<b class="fc"><i>206</i>&nbsp;        this.infectTime = System.currentTimeMillis();</b>
-<b class="fc"><i>207</i>&nbsp;    }</b>
-<i>208</i>&nbsp;
-<i>209</i>&nbsp;    // For unit testing.
-<i>210</i>&nbsp;    public void setInfectTime(long time){
-<b class="fc"><i>211</i>&nbsp;        this.infectTime = time;</b>
-<b class="fc"><i>212</i>&nbsp;    }</b>
-<i>213</i>&nbsp;
-<i>214</i>&nbsp;    public boolean getIgnore(){
-<b class="fc"><i>215</i>&nbsp;        return ignore;</b>
-<i>216</i>&nbsp;    }
-<i>217</i>&nbsp;
-<i>218</i>&nbsp;    public void setIgnore(boolean ignore){
-<b class="fc"><i>219</i>&nbsp;        this.ignore = ignore;</b>
-<b class="fc"><i>220</i>&nbsp;    }</b>
-<i>221</i>&nbsp;
-<i>222</i>&nbsp;    public void setFirstInfected(boolean firstInfected){
-<b class="fc"><i>223</i>&nbsp;        this.firstInfected = firstInfected;</b>
-<b class="fc"><i>224</i>&nbsp;    }</b>
-<i>225</i>&nbsp;
-<i>226</i>&nbsp;    public int getCountHospitalized(){
-<b class="fc"><i>227</i>&nbsp;        return countHospitalized;</b>
-<i>228</i>&nbsp;    }
-<i>229</i>&nbsp;
-<i>230</i>&nbsp;    public void setHospitalCapacity(int hospitalCapacity) {
-<b class="fc"><i>231</i>&nbsp;        this.hospitalCapacity = hospitalCapacity;</b>
-<b class="fc"><i>232</i>&nbsp;    }</b>
-<i>233</i>&nbsp;
-<i>234</i>&nbsp;    public void setComorbidity(boolean comorbidity){
-<b class="fc"><i>235</i>&nbsp;        this.comorbidity = comorbidity;</b>
-<b class="fc"><i>236</i>&nbsp;    }</b>
-<i>237</i>&nbsp;}
+<i>8</i>&nbsp;import Graph.Graph;
+<i>9</i>&nbsp;import Graph.Vertex;
+<i>10</i>&nbsp;import java.awt.Rectangle;
+<i>11</i>&nbsp;import java.util.ArrayList;
+<i>12</i>&nbsp;import java.util.Collections;
+<i>13</i>&nbsp;import java.util.HashMap;
+<i>14</i>&nbsp;import java.util.List;
+<i>15</i>&nbsp;import java.util.Map;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;/**
+<i>18</i>&nbsp; * This program will check the interaction of population , update their health condition (status) and update their position in the 
+<i>19</i>&nbsp; * simulation panel.
+<i>20</i>&nbsp; * @author Manasa
+<i>21</i>&nbsp; */
+<i>22</i>&nbsp;public class Population {
+<i>23</i>&nbsp;
+<b class="fc"><i>24</i>&nbsp;    private Rectangle mainPanel = new Rectangle(0, 0, 700, 400);</b>
+<i>25</i>&nbsp;    private Rectangle groupBox;
+<b class="fc"><i>26</i>&nbsp;    private Map&lt;String,Integer&gt; map= new HashMap&lt;&gt;();</b>
+<i>27</i>&nbsp;    private int status; // 0 for healthy, 1 for infected, 2 for hospitalized , 3 for recovered, 4 for dead, 5 for vaccinated
+<i>28</i>&nbsp;    private int countInfected, hospitalCapacity,countHospitalized;
+<i>29</i>&nbsp;    private boolean firstInfected,quarantined,distancing,vaccinated,prone, ignore, comorbidity,compareVirus;
+<i>30</i>&nbsp;    private double risk,x_f,y_f,x, y, xTemp, yTemp;
+<i>31</i>&nbsp;    private long infectTime;
+<b class="fc"><i>32</i>&nbsp;    private int populationNum,r_naught,tempCount,infectCount,Collisioncount=0;</b>
+<i>33</i>&nbsp;    private boolean groupEvent;
+<i>34</i>&nbsp;    private String code;
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    public Population(int x, int y,Map&lt;String,Boolean&gt; conditions,
+<i>38</i>&nbsp;        int hospitalCapacity,boolean groupEvent,
+<i>39</i>&nbsp;        Rectangle groupBox,int populationNum,
+<b class="fc"><i>40</i>&nbsp;        boolean compareVirus,int r_naught) {</b>
+<i>41</i>&nbsp;
+<b class="fc"><i>42</i>&nbsp;        this.x = x;</b>
+<b class="fc"><i>43</i>&nbsp;        this.y = y;</b>
+<b class="fc"><i>44</i>&nbsp;        this.groupEvent=groupEvent;</b>
+<b class="fc"><i>45</i>&nbsp;        this.groupBox=groupBox;</b>
+<b class="fc"><i>46</i>&nbsp;        this.r_naught = r_naught;</b>
+<b class="fc"><i>47</i>&nbsp;        this.infectCount = 0;</b>
+<b class="fc"><i>48</i>&nbsp;        this.compareVirus = compareVirus; //SAR-CoV Virus(Type2 comparison virus)</b>
+<b class="fc"><i>49</i>&nbsp;        this.comorbidity = conditions.get(&quot;comorbidity&quot;);</b>
+<b class="fc"><i>50</i>&nbsp;        this.hospitalCapacity = hospitalCapacity;</b>
+<b class="fc"><i>51</i>&nbsp;        this.prone = conditions.get(&quot;prone&quot;);</b>
+<b class="fc"><i>52</i>&nbsp;        risk = Math.random();</b>
+<b class="fc"><i>53</i>&nbsp;        this.distancing = conditions.get(&quot;distancingCheck&quot;);</b>
+<i>54</i>&nbsp;
+<b class="fc"><i>55</i>&nbsp;        if(distancing){     //Displacement is less to keep distance from others.</b>
+<b class="fc"><i>56</i>&nbsp;            xTemp = 0.4;</b>
+<b class="fc"><i>57</i>&nbsp;            yTemp = Math.sqrt(4 - Math.pow(xTemp, 2)) * (Math.random() &lt; 0.5 ? -0.4 : 0.4);</b>
+<i>58</i>&nbsp;        }else{          //Usually displacement between 0.4 to 1.9
+<b class="fc"><i>59</i>&nbsp;            xTemp = Math.random() * 4.0 - 2.0;</b>
+<b class="fc"><i>60</i>&nbsp;            yTemp = Math.sqrt(4 - Math.pow(xTemp, 2)) * (Math.random() &lt; 0.5 ? -1.0 : 1.0);</b>
+<i>61</i>&nbsp;        }
+<b class="fc"><i>62</i>&nbsp;        countInfected = 0;</b>
+<b class="fc"><i>63</i>&nbsp;        countHospitalized = 0;</b>
+<b class="fc"><i>64</i>&nbsp;        status = (conditions.get(&quot;infected&quot;) ? 1 : 0);</b>
+<b class="fc"><i>65</i>&nbsp;        firstInfected = conditions.get(&quot;infected&quot;);</b>
+<b class="fc"><i>66</i>&nbsp;        this.quarantined = conditions.get(&quot;quarantine&quot;);</b>
+<i>67</i>&nbsp;
+<b class="fc"><i>68</i>&nbsp;        if(compareVirus){</b>
+<b class="fc"><i>69</i>&nbsp;            vaccinated = false;</b>
+<i>70</i>&nbsp;        }else{             
+<b class="fc"><i>71</i>&nbsp;            this.vaccinated = conditions.get(&quot;vaccinated&quot;);</b>
+<i>72</i>&nbsp;        }
+<i>73</i>&nbsp;
+<b class="fc"><i>74</i>&nbsp;        if(vaccinated){</b>
+<b class="fc"><i>75</i>&nbsp;            status = 5;</b>
+<i>76</i>&nbsp;        }
+<i>77</i>&nbsp;
+<b class="fc"><i>78</i>&nbsp;        uniqueCode();</b>
+<b class="fc"><i>79</i>&nbsp;        this.populationNum=populationNum;</b>
+<b class="fc"><i>80</i>&nbsp;    }</b>
+<i>81</i>&nbsp;    
+<i>82</i>&nbsp;    public Map getCodeDash() {
+<b class="nc"><i>83</i>&nbsp;        return map;</b>
+<i>84</i>&nbsp;    }
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;    public String uniqueCode() {
+<b class="fc"><i>87</i>&nbsp;        List&lt;Integer&gt; numbers = new ArrayList();</b>
+<b class="fc"><i>88</i>&nbsp;        for(int i = 0; i &lt; 10; i++){</b>
+<b class="fc"><i>89</i>&nbsp;            numbers.add(i);</b>
+<i>90</i>&nbsp;        }
+<i>91</i>&nbsp;
+<b class="fc"><i>92</i>&nbsp;        Collections.shuffle(numbers);</b>
+<i>93</i>&nbsp;
+<b class="fc"><i>94</i>&nbsp;        String result = &quot;&quot;;</b>
+<b class="fc"><i>95</i>&nbsp;        for (int i = 0; i &lt; 6; i++) {</b>
+<b class="fc"><i>96</i>&nbsp;            result += numbers.get(i).toString();</b>
+<b class="fc"><i>97</i>&nbsp;            code = &#39;A&#39; + result;</b>
+<i>98</i>&nbsp;        }
+<i>99</i>&nbsp;
+<b class="fc"><i>100</i>&nbsp;        return code;</b>
+<i>101</i>&nbsp;    }
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;    public void countStatus() {
+<b class="fc"><i>104</i>&nbsp;        if(status == 4 ){</b>
+<b class="nc"><i>105</i>&nbsp;            return;</b>
+<i>106</i>&nbsp;        }
+<b class="fc"><i>107</i>&nbsp;        x_f = x + xTemp;</b>
+<b class="fc"><i>108</i>&nbsp;        y_f = y + yTemp;</b>
+<b class="fc"><i>109</i>&nbsp;        if ((status != 2 &amp;&amp; status != 4) &amp;&amp; (!quarantined)) {</b>
+<b class="fc"><i>110</i>&nbsp;            if (groupEvent == true) {</b>
+<i>111</i>&nbsp;
+<b class="nc"><i>112</i>&nbsp;                if (groupBox.contains(x, y) == true) {</b>
+<b class="nc"><i>113</i>&nbsp;                    if (groupBox.contains(x_f, y_f) == false) {</b>
+<b class="nc"><i>114</i>&nbsp;                        if (x_f &lt; groupBox.x || x_f &gt; groupBox.width) {</b>
+<b class="nc"><i>115</i>&nbsp;                            xTemp = -xTemp;</b>
+<i>116</i>&nbsp;                        }
+<b class="nc"><i>117</i>&nbsp;                        if (y_f &lt; groupBox.y || y_f &gt; groupBox.height) {</b>
+<b class="nc"><i>118</i>&nbsp;                            yTemp = -yTemp;</b>
+<i>119</i>&nbsp;                        }
+<i>120</i>&nbsp;                    }
+<i>121</i>&nbsp;                } else {
+<b class="nc"><i>122</i>&nbsp;                    if (x + xTemp &gt; mainPanel.width || x + xTemp &lt; 0) {</b>
+<b class="nc"><i>123</i>&nbsp;                        xTemp = -xTemp;</b>
+<i>124</i>&nbsp;                    }
+<b class="nc"><i>125</i>&nbsp;                    if (y + yTemp &gt; mainPanel.height || y + yTemp &lt; 0) {</b>
+<b class="nc"><i>126</i>&nbsp;                        yTemp = -yTemp;</b>
+<i>127</i>&nbsp;                    }
+<i>128</i>&nbsp;                }
+<i>129</i>&nbsp;            }
+<i>130</i>&nbsp;
+<b class="fc"><i>131</i>&nbsp;            if (groupEvent == false) {</b>
+<i>132</i>&nbsp;
+<b class="fc"><i>133</i>&nbsp;                if (x + xTemp + 10 &gt; mainPanel.width || x + xTemp &lt; 0) {</b>
+<b class="fc"><i>134</i>&nbsp;                    xTemp = -xTemp;</b>
+<i>135</i>&nbsp;                }
+<b class="fc"><i>136</i>&nbsp;                if (y + yTemp + 10 &gt; mainPanel.height || y + yTemp &lt; 0) {</b>
+<b class="fc"><i>137</i>&nbsp;                    yTemp = -yTemp;</b>
+<i>138</i>&nbsp;                }
+<i>139</i>&nbsp;            }
+<i>140</i>&nbsp;
+<b class="fc"><i>141</i>&nbsp;            x += xTemp;</b>
+<b class="fc"><i>142</i>&nbsp;            y += yTemp;</b>
+<i>143</i>&nbsp;        }
+<i>144</i>&nbsp;
+<b class="fc"><i>145</i>&nbsp;       double difference = ((System.currentTimeMillis()) - (this.getInfectTime())) / 1000F;</b>
+<b class="fc"><i>146</i>&nbsp;        if (!firstInfected) {</b>
+<b class="fc"><i>147</i>&nbsp;            if (status == 1) {//infected     </b>
+<b class="fc"><i>148</i>&nbsp;                if(comorbidity){</b>
+<b class="fc"><i>149</i>&nbsp;                    if(countHospitalized &lt; hospitalCapacity ) {</b>
+<b class="fc"><i>150</i>&nbsp;                        status = 2;</b>
+<b class="fc"><i>151</i>&nbsp;                        countHospitalized++;</b>
+<b class="fc"><i>152</i>&nbsp;                        this.quarantined = true;</b>
+<i>153</i>&nbsp;                    }else{
+<b class="fc"><i>154</i>&nbsp;                       status = 2;</b>
+<i>155</i>&nbsp;                    }
+<i>156</i>&nbsp;                }else{
+<b class="fc"><i>157</i>&nbsp;                       if(difference &gt;= 5 ){                 //5ms after infection the person recovers . (5ms is mapped to 15 days)</b>
+<b class="fc"><i>158</i>&nbsp;                           status = 3;</b>
+<i>159</i>&nbsp;                       }                  
+<i>160</i>&nbsp;                }
+<i>161</i>&nbsp;
+<b class="fc"><i>162</i>&nbsp;            } else if (status == 2) {//hospitalized</b>
+<b class="fc"><i>163</i>&nbsp;                double infectTime = ((System.currentTimeMillis()) - (this.getInfectTime())) / 1000F; </b>
+<b class="fc"><i>164</i>&nbsp;                if(infectTime &gt;= 3 ){                                      </b>
+<b class="fc"><i>165</i>&nbsp;                    if (comorbidity){//dead</b>
+<b class="fc"><i>166</i>&nbsp;                        status = 4;</b>
+<i>167</i>&nbsp;                    }
+<i>168</i>&nbsp;                }
+<b class="fc"><i>169</i>&nbsp;            } else if(infectTime &gt;= 5 ){ //recovered</b>
+<b class="fc"><i>170</i>&nbsp;                status = 3;</b>
+<b class="fc"><i>171</i>&nbsp;                quarantined=false;</b>
+<i>172</i>&nbsp;
+<i>173</i>&nbsp;            }
+<i>174</i>&nbsp;        }
+<b class="fc"><i>175</i>&nbsp;    }</b>
+<i>176</i>&nbsp;
+<i>177</i>&nbsp;    public int check(Population p, int infectedQuarantineNum, boolean quarantineCheck,Graph graph){
+<i>178</i>&nbsp;     
+<b class="fc"><i>179</i>&nbsp;        if (!ignore) {</b>
+<b class="fc"><i>180</i>&nbsp;            if (Math.sqrt(Math.pow(x - p.getX(), 2) + Math.pow(y - p.getY(), 2)) &lt; 10) {</b>
+<i>181</i>&nbsp;                
+<b class="fc"><i>182</i>&nbsp;                if(quarantineCheck){</b>
+<b class="nc"><i>183</i>&nbsp;                if (p.getStatus() == 1 &amp;&amp;</b>
+<b class="nc"><i>184</i>&nbsp;                        Math.random() &lt; 0.85 &amp;&amp;</b>
+<i>185</i>&nbsp;                        (status == 0 || status==3 || status ==5) &amp;&amp;
+<i>186</i>&nbsp;                        (this.quarantined==false)) {
+<b class="nc"><i>187</i>&nbsp;                    if(compareVirus){</b>
+<b class="nc"><i>188</i>&nbsp;                        double infectTime = ((System.currentTimeMillis()) - (p.getInfectTime())) / 1000F;</b>
+<b class="nc"><i>189</i>&nbsp;                            if(infectTime &gt;=3){</b>
+<b class="nc"><i>190</i>&nbsp;                                if(r_naught &gt; 0){      //Considering transmission level based on R-naught value if passed.</b>
+<b class="nc"><i>191</i>&nbsp;                                    if(p.getInfectCount() &lt; r_naught){</b>
+<b class="nc"><i>192</i>&nbsp;                                        status = 1;</b>
+<b class="nc"><i>193</i>&nbsp;                                        tempCount = p.getInfectCount();</b>
+<b class="nc"><i>194</i>&nbsp;                                        p.setInfectCount(++tempCount);</b>
+<b class="nc"><i>195</i>&nbsp;                                        infectCount =0;</b>
+<b class="nc"><i>196</i>&nbsp;                                        this.setInfectTime();</b>
+<b class="nc"><i>197</i>&nbsp;                                        if(infectedQuarantineNum &gt; 0){</b>
+<b class="nc"><i>198</i>&nbsp;                                            this.quarantined=true;</b>
+<b class="nc"><i>199</i>&nbsp;                                            infectedQuarantineNum--;</b>
+<i>200</i>&nbsp;                                        }                                         
+<i>201</i>&nbsp;                                    }
+<i>202</i>&nbsp;                                }else{
+<b class="nc"><i>203</i>&nbsp;                                    status = 1;</b>
+<b class="nc"><i>204</i>&nbsp;                                    this.setInfectTime();</b>
+<b class="nc"><i>205</i>&nbsp;                                    if(infectedQuarantineNum &gt; 0){</b>
+<b class="nc"><i>206</i>&nbsp;                                        this.quarantined=true;</b>
+<b class="nc"><i>207</i>&nbsp;                                        infectedQuarantineNum--;</b>
+<i>208</i>&nbsp;                                    }
+<i>209</i>&nbsp;                                }
+<i>210</i>&nbsp;                            }
+<b class="nc"><i>211</i>&nbsp;                    }else{</b>
+<i>212</i>&nbsp;                        
+<b class="nc"><i>213</i>&nbsp;                        if(r_naught &gt; 0){</b>
+<b class="nc"><i>214</i>&nbsp;                            if(p.getInfectCount() &lt; r_naught){</b>
+<b class="nc"><i>215</i>&nbsp;                                status = 1;</b>
+<b class="nc"><i>216</i>&nbsp;                                contactTracing(graph,p);</b>
+<b class="nc"><i>217</i>&nbsp;                                tempCount = p.getInfectCount();</b>
+<b class="nc"><i>218</i>&nbsp;                                p.setInfectCount(++tempCount);</b>
+<b class="nc"><i>219</i>&nbsp;                                infectCount =0;</b>
+<b class="nc"><i>220</i>&nbsp;                                this.setInfectTime();</b>
+<b class="nc"><i>221</i>&nbsp;                                if(infectedQuarantineNum &gt; 0){</b>
+<b class="nc"><i>222</i>&nbsp;                                    this.quarantined=true;</b>
+<b class="nc"><i>223</i>&nbsp;                                    infectedQuarantineNum--;</b>
+<i>224</i>&nbsp;                                }                                         
+<i>225</i>&nbsp;                            }
+<i>226</i>&nbsp;                        }else{    
+<b class="nc"><i>227</i>&nbsp;                            status = 1;</b>
+<b class="nc"><i>228</i>&nbsp;                            contactTracing(graph,p);</b>
+<b class="nc"><i>229</i>&nbsp;                            this.setInfectTime();</b>
+<b class="nc"><i>230</i>&nbsp;                            if(infectedQuarantineNum &gt; 0){</b>
+<b class="nc"><i>231</i>&nbsp;                                this.quarantined=true;</b>
+<b class="nc"><i>232</i>&nbsp;                                infectedQuarantineNum--;</b>
+<i>233</i>&nbsp;                            }
+<i>234</i>&nbsp;                        }
+<i>235</i>&nbsp;                    }
+<i>236</i>&nbsp;                }
+<i>237</i>&nbsp;            }else{
+<b class="fc"><i>238</i>&nbsp;                if (p.getStatus() == 1 &amp;&amp; Math.random() &lt; 0.85 &amp;&amp; (status == 0 || status==3 || status==5) ) {</b>
+<b class="nc"><i>239</i>&nbsp;                    if(compareVirus){</b>
+<b class="nc"><i>240</i>&nbsp;                        double infectTime = ((System.currentTimeMillis()) - (p.getInfectTime())) / 1000F;</b>
+<b class="nc"><i>241</i>&nbsp;                            if(infectTime &gt;=3){</b>
+<b class="nc"><i>242</i>&nbsp;                                if(r_naught &gt; 0){</b>
+<b class="nc"><i>243</i>&nbsp;                                    if(p.getInfectCount() &lt; r_naught){</b>
+<b class="nc"><i>244</i>&nbsp;                                    status = 1;</b>
+<b class="nc"><i>245</i>&nbsp;                                    tempCount = p.getInfectCount();</b>
+<b class="nc"><i>246</i>&nbsp;                                    p.setInfectCount(++tempCount);</b>
+<b class="nc"><i>247</i>&nbsp;                                    infectCount =0;</b>
+<b class="nc"><i>248</i>&nbsp;                                    this.setInfectTime();                                  </b>
+<i>249</i>&nbsp;                                    }
+<i>250</i>&nbsp;                                }else{ 
+<b class="nc"><i>251</i>&nbsp;                                    status = 1;</b>
+<b class="nc"><i>252</i>&nbsp;                                    this.setInfectTime();                              </b>
+<i>253</i>&nbsp;                                }
+<i>254</i>&nbsp;                            }    
+<b class="nc"><i>255</i>&nbsp;                    }else{</b>
+<b class="nc"><i>256</i>&nbsp;                        if(r_naught &gt; 0){</b>
+<b class="nc"><i>257</i>&nbsp;                            if(p.getInfectCount() &lt; r_naught){</b>
+<b class="nc"><i>258</i>&nbsp;                                status = 1;</b>
+<b class="nc"><i>259</i>&nbsp;                                contactTracing(graph,p);</b>
+<b class="nc"><i>260</i>&nbsp;                                tempCount = p.getInfectCount();</b>
+<b class="nc"><i>261</i>&nbsp;                                p.setInfectCount(++tempCount);</b>
+<b class="nc"><i>262</i>&nbsp;                                infectCount =0;</b>
+<b class="nc"><i>263</i>&nbsp;                                this.setInfectTime();                                  </b>
+<i>264</i>&nbsp;                            }
+<i>265</i>&nbsp;                        }else{ 
+<b class="nc"><i>266</i>&nbsp;                            status = 1;</b>
+<b class="nc"><i>267</i>&nbsp;                            contactTracing(graph,p);</b>
+<b class="nc"><i>268</i>&nbsp;                            this.setInfectTime();</b>
+<i>269</i>&nbsp;                        } 
+<i>270</i>&nbsp;                    }
+<i>271</i>&nbsp;                }
+<i>272</i>&nbsp;            }
+<i>273</i>&nbsp;
+<b class="fc"><i>274</i>&nbsp;                if ((!quarantined) &amp;&amp;  (status != 2) ) {</b>
+<b class="nc"><i>275</i>&nbsp;                    if(distancing){     //Displacement is less to keep distance from others.</b>
+<b class="nc"><i>276</i>&nbsp;                        xTemp = (Math.random() * 2 * (x - p.getX() &lt; 0 ? -0.4 : 0.4));</b>
+<b class="nc"><i>277</i>&nbsp;                        yTemp = (Math.sqrt(4 - Math.pow(xTemp, 2))) * (y - p.getY() &lt; 0 ? -0.4 : 0.4);</b>
+<i>278</i>&nbsp;                    }else{
+<b class="nc"><i>279</i>&nbsp;                        xTemp = (Math.random() * 2 * (x - p.getX() &lt; 0 ? -1.0 : 1.0));</b>
+<b class="nc"><i>280</i>&nbsp;                        yTemp = (Math.sqrt(4 - Math.pow(xTemp, 2))) * (y - p.getY() &lt; 0 ? -1.0 : 1.0);</b>
+<b class="nc"><i>281</i>&nbsp;                        p.ignoreCheck();</b>
+<i>282</i>&nbsp;                    }
+<i>283</i>&nbsp;                }
+<i>284</i>&nbsp;
+<b class="fc"><i>285</i>&nbsp;                if((vaccinated) &amp;&amp; (!prone)){</b>
+<b class="nc"><i>286</i>&nbsp;                    p.ignoreCheck();</b>
+<i>287</i>&nbsp;                }
+<b class="fc"><i>288</i>&nbsp;                if (firstInfected) {</b>
+<b class="fc"><i>289</i>&nbsp;                    firstInfected = false;</b>
+<i>290</i>&nbsp;                }
+<i>291</i>&nbsp;            }
+<i>292</i>&nbsp;
+<i>293</i>&nbsp;        } else {
+<b class="nc"><i>294</i>&nbsp;            if(!((vaccinated) &amp;&amp; (!prone))){</b>
+<b class="nc"><i>295</i>&nbsp;            ignore = false;</b>
+<i>296</i>&nbsp;            }
+<i>297</i>&nbsp;        }
+<b class="fc"><i>298</i>&nbsp;        return infectedQuarantineNum;  </b>
+<i>299</i>&nbsp;    }
+<i>300</i>&nbsp;
+<i>301</i>&nbsp;    public void ignoreCheck() {
+<b class="fc"><i>302</i>&nbsp;        ignore = true;</b>
+<b class="fc"><i>303</i>&nbsp;    }</b>
+<i>304</i>&nbsp;
+<i>305</i>&nbsp;    public void hospitalize() {
+<b class="fc"><i>306</i>&nbsp;        if (!firstInfected) {</b>
+<b class="fc"><i>307</i>&nbsp;            status = 2;</b>
+<i>308</i>&nbsp;        }
+<b class="fc"><i>309</i>&nbsp;    }</b>
+<i>310</i>&nbsp;    
+<i>311</i>&nbsp;    public void contactTracing(Graph graph, Population p){
+<b class="nc"><i>312</i>&nbsp;        if (graph.checkVertex(p.code) == false) {</b>
+<b class="nc"><i>313</i>&nbsp;            graph.AddVertex(new Vertex(p.code));</b>
+<i>314</i>&nbsp;        }
+<i>315</i>&nbsp;                
+<b class="nc"><i>316</i>&nbsp;        if (graph.checkVertex(code) == false) {</b>
+<b class="nc"><i>317</i>&nbsp;            graph.AddVertex(new Vertex(code));</b>
+<i>318</i>&nbsp;
+<i>319</i>&nbsp;        }
+<i>320</i>&nbsp;
+<b class="nc"><i>321</i>&nbsp;        graph.AddEdge(p.code, code);</b>
+<b class="nc"><i>322</i>&nbsp;    }</b>
+<i>323</i>&nbsp;
+<i>324</i>&nbsp;    public void kill() {
+<b class="fc"><i>325</i>&nbsp;        status = 4;</b>
+<b class="fc"><i>326</i>&nbsp;    }</b>
+<i>327</i>&nbsp;
+<i>328</i>&nbsp;    public int getStatus() {
+<b class="fc"><i>329</i>&nbsp;        return status;</b>
+<i>330</i>&nbsp;    }
+<i>331</i>&nbsp;
+<i>332</i>&nbsp;    public void setStatus(int status) {
+<b class="fc"><i>333</i>&nbsp;        this.status = status;</b>
+<b class="fc"><i>334</i>&nbsp;    }</b>
+<i>335</i>&nbsp;
+<i>336</i>&nbsp;    public double getX() {
+<b class="fc"><i>337</i>&nbsp;        return x;</b>
+<i>338</i>&nbsp;    }
+<i>339</i>&nbsp;
+<i>340</i>&nbsp;    public void setX(double x) {
+<b class="fc"><i>341</i>&nbsp;        this.x = x;</b>
+<b class="fc"><i>342</i>&nbsp;    }</b>
+<i>343</i>&nbsp;
+<i>344</i>&nbsp;    public double getY() {
+<b class="fc"><i>345</i>&nbsp;        return y;</b>
+<i>346</i>&nbsp;    }
+<i>347</i>&nbsp;
+<i>348</i>&nbsp;    public void setY(double y) {
+<b class="fc"><i>349</i>&nbsp;        this.y = y;</b>
+<b class="fc"><i>350</i>&nbsp;    }</b>
+<i>351</i>&nbsp;
+<i>352</i>&nbsp;    public boolean isInfected() {
+<b class="fc"><i>353</i>&nbsp;        return (status == 1 ? true : false);</b>
+<i>354</i>&nbsp;    }
+<i>355</i>&nbsp;
+<i>356</i>&nbsp;    public boolean isQuarantined() {
+<b class="fc"><i>357</i>&nbsp;        return quarantined;</b>
+<i>358</i>&nbsp;    }
+<i>359</i>&nbsp;
+<i>360</i>&nbsp;    public void setQuarantined(boolean quarantined) {
+<b class="fc"><i>361</i>&nbsp;        this.quarantined = quarantined;</b>
+<b class="fc"><i>362</i>&nbsp;    }</b>
+<i>363</i>&nbsp;
+<i>364</i>&nbsp;    public long getInfectTime() {
+<b class="fc"><i>365</i>&nbsp;        return this.infectTime;</b>
+<i>366</i>&nbsp;    }
+<i>367</i>&nbsp;
+<i>368</i>&nbsp;    public void setInfectTime() {
+<b class="fc"><i>369</i>&nbsp;        this.infectTime = System.currentTimeMillis();</b>
+<b class="fc"><i>370</i>&nbsp;    }</b>
+<i>371</i>&nbsp;
+<i>372</i>&nbsp;    // For unit testing.
+<i>373</i>&nbsp;    public void setInfectTime(long time){
+<b class="fc"><i>374</i>&nbsp;        this.infectTime = time;</b>
+<b class="fc"><i>375</i>&nbsp;    }</b>
+<i>376</i>&nbsp;
+<i>377</i>&nbsp;    public boolean getIgnore(){
+<b class="fc"><i>378</i>&nbsp;        return ignore;</b>
+<i>379</i>&nbsp;    }
+<i>380</i>&nbsp;
+<i>381</i>&nbsp;    public void setIgnore(boolean ignore){
+<b class="fc"><i>382</i>&nbsp;        this.ignore = ignore;</b>
+<b class="fc"><i>383</i>&nbsp;    }</b>
+<i>384</i>&nbsp;
+<i>385</i>&nbsp;    public void setFirstInfected(boolean firstInfected){
+<b class="fc"><i>386</i>&nbsp;        this.firstInfected = firstInfected;</b>
+<b class="fc"><i>387</i>&nbsp;    }</b>
+<i>388</i>&nbsp;
+<i>389</i>&nbsp;    public int getCountHospitalized(){
+<b class="fc"><i>390</i>&nbsp;        return countHospitalized;</b>
+<i>391</i>&nbsp;    }
+<i>392</i>&nbsp;
+<i>393</i>&nbsp;    public void setHospitalCapacity(int hospitalCapacity) {
+<b class="fc"><i>394</i>&nbsp;        this.hospitalCapacity = hospitalCapacity;</b>
+<b class="fc"><i>395</i>&nbsp;    }</b>
+<i>396</i>&nbsp;
+<i>397</i>&nbsp;    public void setComorbidity(boolean comorbidity){
+<b class="fc"><i>398</i>&nbsp;        this.comorbidity = comorbidity;</b>
+<b class="fc"><i>399</i>&nbsp;    }</b>
+<i>400</i>&nbsp;
+<i>401</i>&nbsp;    public boolean isCompareVirus() {
+<b class="nc"><i>402</i>&nbsp;        return compareVirus;</b>
+<i>403</i>&nbsp;    }
+<i>404</i>&nbsp;
+<i>405</i>&nbsp;    public int getInfectCount() {
+<b class="nc"><i>406</i>&nbsp;        return infectCount;</b>
+<i>407</i>&nbsp;    }
+<i>408</i>&nbsp;
+<i>409</i>&nbsp;    public void setInfectCount(int count) {
+<b class="nc"><i>410</i>&nbsp;        this.infectCount=count;</b>
+<b class="nc"><i>411</i>&nbsp;    }</b>
+<i>412</i>&nbsp;
+<i>413</i>&nbsp;    public int getR_Naught(){
+<b class="nc"><i>414</i>&nbsp;        return r_naught;</b>
+<i>415</i>&nbsp;    }
+<i>416</i>&nbsp;
+<i>417</i>&nbsp;    @Override
+<i>418</i>&nbsp;    public String toString() {
+<b class="nc"><i>419</i>&nbsp;        return &quot;Population{&quot; +</b>
+<i>420</i>&nbsp;                &quot;, status=&quot; + status +
+<i>421</i>&nbsp;                &quot;, countInfected=&quot; + countInfected +
+<i>422</i>&nbsp;                &quot;, hospitalCapacity=&quot; + hospitalCapacity +
+<i>423</i>&nbsp;                &quot;, countHospitalized=&quot; + countHospitalized +
+<i>424</i>&nbsp;                &#39;}&#39;;
+<i>425</i>&nbsp;    }
+<i>426</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2021-04-14 02:02</div>
+    <div style="float:right;">generated on 2021-04-21 09:39</div>
 </div>
 </body>
 </html>
