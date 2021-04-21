@@ -49,3 +49,6 @@ The simulation has START,STOP, RESUME and PAUSE buttons.
 Population counts on different health conditions for the simulation can be viewed at the top pane. The panel shows real time infection rate graph right below the simulation.
 On click of PLOT button you can see the infection growth rate on various health conditions which is created using JFree chart.
 The log pane at the bottom will display the number of infected, healthy, recovered and dead people relative to time (in days)
+
+## Configuration file
+We use config.ini file to configure infection parameters, vaccine parameters, 2D Graphic component size and certain other conditions like hospitalcapacity. s(More details given in the config.ini file)
