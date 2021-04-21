@@ -25,6 +25,9 @@ The transmission of SARS-CoV-2 virus is also compared with SARS-CoV.
   git clone https://github.com/AnjaliSajeevan/FinalProject_INFO6205.git
 ```
 
+## Demo
+[![Watch the demo](https://img.icons8.com/color/x/google-drive--v2.png)](https://drive.google.com/file/d/1Qg5RN25oT5t017FxmI4W8RkEqP1Ayza9/view?usp=sharing)
+
 ## Required Jar files 
 - ini4j-0.5.1.jar
 - jcommon-1.0.23.jar
