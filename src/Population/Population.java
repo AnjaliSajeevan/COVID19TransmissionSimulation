@@ -99,6 +99,8 @@ public class Population {
 
         return code;
     }
+    
+    //update population health condition and x y coordinates
 
     public void countStatus() {
         if(status == 4 ){
@@ -254,7 +256,7 @@ public class Population {
                             }    
                     }else{
                         if(r_naught > 0){
-                            if(p.getInfectCount() < r_naught){
+                            if(p.getInfectCount() < r_naught){     //No of people the infected person can transmit to depends on r-naught if greater than 0.
                                 status = 1;
                                 contactTracing(graph,p);
                                 tempCount = p.getInfectCount();
@@ -318,7 +320,7 @@ public class Population {
 
         }
 
-        graph.AddEdge(p.code, code);
+        graph.AddEdge(p.code, code);                  //Adding healthy in edge of infected person - for contact tracing
     }
 
     public void kill() {
