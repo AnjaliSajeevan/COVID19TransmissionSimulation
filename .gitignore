@@ -3,7 +3,6 @@
 ##############################
 .mtj.tmp/
 *.class
-*.jar
 *.war
 *.ear
 *.nar
@@ -94,6 +93,5 @@ nb-configuration.xml
 *.class
 
 # Package Files #
-*.jar
 *.war
 *.ear
