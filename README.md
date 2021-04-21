@@ -17,7 +17,7 @@ The aim of the project is to simulate a SARS-CoV-2 virus and analyze the effecti
 
 The transmission of SARS-CoV-2 virus is also compared with SARS-CoV.
 
-## Usage
+## Setup
  - first download and install jdk_8 here
  - setup the JAVA_HOME system variable
  - Clone or fork this repository.
@@ -56,4 +56,4 @@ The Plot button helps charting a graph which outlines the growth/decrease in the
 The log pane at the bottom will display the number of infected, healthy, recovered and dead people relative to time (in days) along with the different parameters/constraints selected.
 
 ## Configuration file
-We use config.ini file to configure infection parameters, vaccine parameters, 2D Graphic component size and certain other conditions like hospital capacity. (More details given in the config.ini file)
+We use config.ini file to configure infection parameters, vaccine parameters, 2D Graphic component size and certain other conditions like hospital capacity. (More details are given in the config.ini file)
